@@ -14,26 +14,52 @@ $( document ).ready(function() {
 		$( "#error" ).html('');
 		$( "#context" ).html('');
 		
-		loadcontent("#context", "ajax/" + hash.replace( /^#/, '' ) + ".html");
+		loadcontent("#context", "ajax/" + hash + ".html");
 	});
 	$(window).hashchange();
 });
 
 function loadcontent( id, path )
 {
+	var animatePeriod = 200;
+
+	$( "#loading" ).animate({opacity: 1}, animatePeriod);
 	$( "#loading" ).removeClass("hidden"); //show loading animation
 	
-	$( id ).load( path, function( response, status, xhr ) {
-	if ( status == "error" ) {
-		var msg = "<h1>Sorry :(</h1><br>Error Occured:<br>";
-		$( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-	}
-	if($( "#error" ).html() == '' || $( "#error" ).html() == undefined)
-		$( "#error" ).addClass("hidden");
-	else
-		$( "#error" ).removeClass("hidden");
+	$( id ).animate({opacity: 0}, animatePeriod, function() {
+		// Animation complete.
+		$( id ).load( path, function( response, status, xhr ) {
+			if ( status == "error" ) {
+				var msg = "<h1>Sorry :(</h1><br>Error Occured:<br>";
+				$( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
+			}
+			else
+				$( id ).animate({opacity: 1}, animatePeriod);
+			
+			if($( "#error" ).html() == '' || $( "#error" ).html() == undefined)
+			{
+				$( "#error" ).animate({opacity: 0}, animatePeriod);
+				$( "#error" ).addClass("hidden");
+			}
+			else
+			{
+				$( "#error" ).animate({opacity: 1}, animatePeriod);
+				$( "#error" ).removeClass("hidden");
+			}
+
+			$( "#loading" ).animate({opacity: 0}, animatePeriod);
+			$( "#loading" ).addClass("hidden"); //hide loading animation
+		});
 	});
-	
-	$( "#loading" ).addClass("hidden"); //hide loading animation
 }
+
+$(function() {
+  // Setup drop down menu
+  $('.dropdown-toggle').dropdown();
+ 
+  // Fix input element click problem
+  $('.dropdown input, .dropdown label').click(function(e) {
+    e.stopPropagation();
+  });
+});
 

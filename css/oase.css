@@ -1,5 +1,14 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
-  padding-top: 20px;
+  padding-top: 10px;
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
 }
 
 body, h1, h2, h3, h4, h5, h6, li, .btn {
@@ -7,9 +16,13 @@ body, h1, h2, h3, h4, h5, h6, li, .btn {
 }
 
 .footer {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  margin-top: 40px;
+  position: absolute;
+  bottom: 0;
+  width: 60%;
+  left: 20%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  padding-top: 10px;
   border-top: 1px solid #eee;
 }
 

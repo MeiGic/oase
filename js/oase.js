@@ -1,11 +1,13 @@
 $( document ).ready(function() {
 	loadcontent("#header", "ajax/header.html");
 	loadcontent("#footer", "ajax/footer.html");
-	
-	if(window.location.hash == '' || window.location.hash == undefined)
-		window.location.hash = 'news';
+	var spinner = new Spinner().spin();
+	loading.appendChild(spinner.el);
 	
 	$(window).hashchange( function() {
+		if(window.location.hash == '' || window.location.hash == undefined)
+			window.location.hash = 'news';
+		
 		var hash = window.location.hash;
 		hash = ( hash.replace( /^#/, '' ) || 'blank' )
 		
@@ -19,6 +21,8 @@ $( document ).ready(function() {
 
 function loadcontent( id, path )
 {
+	$( "#loading" ).removeClass("hidden"); //show loading animation
+	
 	$( id ).load( path, function( response, status, xhr ) {
 	if ( status == "error" ) {
 		var msg = "<h1>Sorry :(</h1><br>Error Occured:<br>";
@@ -29,5 +33,7 @@ function loadcontent( id, path )
 	else
 		$( "#error" ).removeClass("hidden");
 	});
+	
+	$( "#loading" ).addClass("hidden"); //hide loading animation
 }
 

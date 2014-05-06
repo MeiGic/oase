@@ -15,6 +15,8 @@ $( document ).ready(function() {
 		$( "#context" ).html('');
 		
 		loadcontent("#context", "ajax/" + hash + ".html");
+		setTimeout(function(){setpage()}, 500);
+		//setpage();
 	});
 	$(window).hashchange();
 });
@@ -52,14 +54,3 @@ function loadcontent( id, path )
 		});
 	});
 }
-
-$(function() {
-  // Setup drop down menu
-  $('.dropdown-toggle').dropdown();
- 
-  // Fix input element click problem
-  $('.dropdown input, .dropdown label').click(function(e) {
-    e.stopPropagation();
-  });
-});
-

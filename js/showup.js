@@ -19,7 +19,16 @@
     var previousScroll = 0;
 
     $(window).scroll(function () {
-      // var currentScroll = $(this).scrollTop();
+      checkScrollTop();
+    });
+	
+	$(window).resize(function () {
+      checkScrollTop();
+    });
+	
+	function checkScrollTop()
+	{
+	  // var currentScroll = $(this).scrollTop();
       if ($(this).scrollTop() > hideOffset) {
         if ($(this).scrollTop() > previousScroll) {
           // Action on scroll down
@@ -30,7 +39,7 @@
         }
       }
       previousScroll = $(this).scrollTop();
-    });
+	}
 
     // Toggle visibility of target on click
     $(btnHideShow).click(function () {

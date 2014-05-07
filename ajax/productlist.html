@@ -28,7 +28,7 @@
 	</div>
     {{/photo}}
 {{/photos}} -->
-
+<script src="js/waterfall.js"></script>
 <script>
 $('#container').waterfall({
     itemCls: 'item',
@@ -68,7 +68,7 @@ $('#container').waterfall({
 				childSelector: '.productname',
 				show: function( elem ) {
 					elem.slideDown(100);
-					//elem.removeClass("hidden").addClass("item");
+					elem.removeClass("hidden").addClass("item");
 				},
 				hide: function( elem ) {
 					elem.slideUp( 100 );
@@ -80,7 +80,7 @@ $('#container').waterfall({
 				},
 				onSearchEmpty: function( elem ) {
 					//elem.hide();
-					$(".temp").removeClass("hidden").removeClass("temp").addClass("item");
+					$(".temp").addClass("item").removeClass("hidden").removeClass("temp");
 					$('#container').waterfall('reLayout');
 				},
 				onSearchFocus: function() {
@@ -104,4 +104,5 @@ $('#container').waterfall({
 		}
 	}
 });
+$('body').css('overflow-x','hidden');
 </script>

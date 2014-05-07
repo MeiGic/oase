@@ -3,7 +3,7 @@
 /* CJK Unified Ideographs U+4E00-U+9FFF */
 @font-face {
   font-family: readable;
-  src: local("微軟正黑體"), local("Microsoft JhengHei");
+  src: local("Microsoft YaHei"), local("Microsoft JhengHei");
   unicode-range: U+4E00-9FFF;
 }
 
@@ -17,7 +17,7 @@
 /* Bopomofo U+3105-U+312C */
 @font-face {
   font-family: readable;
-  src: local("微軟正黑體"), local(Microsoft JhengHei);
+  src: local("Microsoft YaHei"), local(Microsoft JhengHei);
   unicode-range: U+3105-312C;
 }
 

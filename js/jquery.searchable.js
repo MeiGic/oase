@@ -22,12 +22,14 @@
             onSearchEmpty: false,
             onSearchFocus: false,
             onSearchBlur: false,
+			onSearchComplete: false,
             clearOnLoad: false
         },
         searchActiveCallback = false,
         searchEmptyCallback = false,
         searchFocusCallback = false,
-        searchBlurCallback = false;
+        searchBlurCallback = false,
+		searchCompleteCallback = false;
 
     function isFunction(value) {
         return typeof value === 'function';
@@ -56,6 +58,7 @@
             searchEmptyCallback = isFunction( this.settings.onSearchEmpty );
             searchFocusCallback = isFunction( this.settings.onSearchFocus );
             searchBlurCallback = isFunction( this.settings.onSearchBlur );
+			searchCompleteCallback = isFunction( this.settings.onSearchComplete );
         },
 
         bindEvents: function() {
@@ -137,6 +140,10 @@
                     this.settings.show( $elem );
                 }
             }
+			
+			if ( searchCompleteCallback ) {
+				this.settings.onSearchComplete( this.$element, term );
+			}
         },
 
         getMatcherFunction: function( type ) {

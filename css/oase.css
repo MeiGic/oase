@@ -8,12 +8,12 @@ body {
   /* Margin bottom by header height */
   margin-top: 60px;
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  margin-bottom: 100px;
   font-family: readable;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6, .btn {
+h1, h2, h3, h4, h5, h6, .btn, .nav {
   font-family: readable;
   -webkit-font-smoothing: antialiased;
 }
@@ -21,19 +21,21 @@ h1, h2, h3, h4, h5, h6, .btn {
 .brand
 {
   background: url(../images/logo-lg.png) no-repeat center center;
-  background-size: 57px 57px;
+  background-size: 50px 50px;
   width: 80px;
   height: 57px;
   display: inline-block;
+  vertical-align: middle;
 }
 
-.brand-xs
+.logo
 {
-  background: url(../images/logo-lg.png) no-repeat center center;
-  background-size: 20px 20px;
-  width: 20px;
-  height: 20px;
+  background: url(../images/logo.png) no-repeat center center;
+  background-size: 100%, 100%;
+  width: 200px;
+  height: 200px;
   display: inline-block;
+  vertical-align: middle;
 }
 
 /* Center the nav bar */
@@ -49,13 +51,8 @@ h1, h2, h3, h4, h5, h6, .btn {
 .watermark {
   position: absolute;
   right: 20%;
-  bottom:  10%;
+  bottom: 10%;
   font-size: 500%;
-}
-
-.header {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
 }
 
 .footer {
@@ -64,7 +61,7 @@ h1, h2, h3, h4, h5, h6, .btn {
   width: 60%;
   left: 20%;
   /* Set the fixed height of the footer here */
-  height: 60px;
+  height: 100px;
   padding-top: 10px;
   border-top: 1px solid #eee;
 }

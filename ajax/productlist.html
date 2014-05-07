@@ -2,7 +2,7 @@
 <br>
 <div class="row">
 	<div class="col-lg-4 col-lg-offset-4">
-		<input type="search" id="container-search" value="" class="form-control" placeholder="想喝什麼？">
+		<input type="search" id="container-search" value="" class="form-control" placeholder="想喝什麼？"></input>
 	</div>
 </div>
 <br>
@@ -37,8 +37,6 @@ $('#container').waterfall({
     gutterHeight: 15,
 	maxPage: 1,
 	isFadeIn: true,
-	isAnimated: true,
-	
 	path: function( page ) {
         return 'http://www.meigic.tw/oase/go.php';
     },
@@ -70,12 +68,11 @@ $('#container').waterfall({
 				childSelector: '.productname',
 				show: function( elem ) {
 					elem.slideDown(100);
-					//elem.remove();
-					//$('#container').waterfall('reLayout');
+					//elem.removeClass("hidden").addClass("item");
 				},
 				hide: function( elem ) {
 					elem.slideUp( 100 );
-					//$('#container').waterfall('reLayout');
+					elem.removeClass("item").addClass("hidden").addClass("temp");
 				},
 				searchType    : 'fuzzy',
 				onSearchActive : function( elem, term ) {
@@ -83,15 +80,17 @@ $('#container').waterfall({
 				},
 				onSearchEmpty: function( elem ) {
 					//elem.hide();
+					$(".temp").removeClass("hidden").removeClass("temp").addClass("item");
+					$('#container').waterfall('reLayout');
 				},
 				onSearchFocus: function() {
-					//$( '#container-search' ).show().text( 'Type to search.' );
 				},
 				onSearchBlur: function() {
-					//$( '#container-search' ).hide();
+				},
+				onSearchComplete: function(elem, term) {
+					$('#container').waterfall('reLayout');
 				},
 				clearOnLoad: true,
-				debug: true
 			});
 			if ( !isBeyondMaxPage ) {
                 $loading.fadeOut();

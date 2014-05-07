@@ -23,7 +23,7 @@
   <div class="container">
 	<div class="navbar-header">
 	  <div class="nav navbar-nav visible-xs row text-center">
-		<a href="#news"><i class="brand btn"></i></a>
+		<a href="#news"><i class="brand"></i></a>
 		<a href="#productlist"><i class="fa fa-beer fa-lg"></i></a>
 		<a href="#storelist"><i class="fa fa-map-marker fa-lg"></i></a>
 		<a href="#shopcart"><i class="fa fa-shopping-cart fa-lg"></i></a>
@@ -41,3 +41,9 @@
 	</div>
   </div>
 </div>
+<script>
+  $().showUp('.navbar', {
+	upClass: 'navbar-hide',
+	downClass: 'navbar-show'
+  });
+</script>

@@ -1,27 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="ico/favicon.ico">
+	<!-- favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="images/apple-touch-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="images/apple-touch-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="images/apple-touch-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="images/apple-touch-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="images/apple-touch-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+	<link rel="icon" type="image/png" href="images/favicon-196x196.png" sizes="196x196">
+	<link rel="icon" type="image/png" href="images/favicon-160x160.png" sizes="160x160">
+	<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+	<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+	<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="msapplication-TileImage" content="images/mstile-144x144.png">
 
     <title>OASE 綠洲飲品連鎖店</title>
+	
+	<!-- Font -->
+	<link rel="stylesheet" type="text/css" href="css/font.css">
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	
 	<!-- Font awesome -->
-	<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" >
+	<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	
+	<!-- waterfall -->
+	<!-- <link rel="stylesheet" href="css/reset.css"> -->
+    <link rel="stylesheet" href="css/waterfall.css">
 
     <!-- Custom styles for this template -->
     <link href="css/oase.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="js/ie-emulation-modes-warning.js"></script>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
@@ -38,10 +56,9 @@
 		<!-- /container -->
 		<div class="container">
 			<div id="header"></div>
+			<div class="bs-callout bs-callout-danger text-center hidden" id="error"></div>
 			<div id="context"></div>
 			<div class="hidden" id="loading"></div>
-			<div class="bs-callout bs-callout-danger text-center hidden" id="error"></div>
-			
 		</div> 
 		<!-- /container -->
 	</div>
@@ -59,6 +76,15 @@
 	<script src="js/spin.min.js"></script>
 	<script src="js/url.min.js"></script>
 	<script src="js/jquery.ba-hashchange.min.js"></script>
+	<script src="js/jquery.flexverticalcenter.js"></script>
+	<script src="js/jquery.fittext.js"></script>
+	<script src="js/jquery.searchable.js"></script>
+	<script src="js/handlebars.js"></script>
+	<script src="js/mustache.js"></script>
+	<script src="js/waterfall.js"></script>
+	<script>
+	  $("body").fitText(100, { minFontSize: '20px', maxFontSize: '40px' })
+	</script>
 	<script src="js/oase.js"></script>
   </body>
 </html>

@@ -15,15 +15,24 @@ $( document ).ready(function() {
 		$( "#context" ).html('');
 		
 		loadcontent("#context", "ajax/" + hash + ".html");
-		setTimeout(function(){setpage()}, 500);
-		//setpage();
 	});
 	$(window).hashchange();
 });
 
-function loadcontent( id, path )
+function centerContext() {
+	var offset = ($( window ).height() - $( "body" ).height()) / 6;
+	$( "#context" ).css("margin-top", 0);
+	$( "#context" ).flexVerticalCenter({
+		verticalOffset : offset
+	});
+}
+
+function loadcontent( id, path, completeEvent )
 {
 	var animatePeriod = 200;
+	
+	$( id ).clearQueue();
+    $( id ).stop();
 
 	$( "#loading" ).animate({opacity: 1}, animatePeriod);
 	$( "#loading" ).removeClass("hidden"); //show loading animation

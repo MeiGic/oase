@@ -1,3 +1,108 @@
-<div class="text-right text-muted watermark">
-	施工中<br>(´・ω・`)
+<br>
+<br>
+<div class="row">
+	<div class="col-lg-4 col-lg-offset-4">
+		<input type="search" id="container-search" value="" class="form-control" placeholder="想喝什麼？">
+	</div>
 </div>
+<br>
+<div id="container"></div>
+<script type="text/x-handlebars-template" id="waterfall-tpl">
+{{#result}}
+<div class="item" style="width:222px;">
+	<img style="width:192px;" alt="{{p_name}}" src="{{pic_path}}" />
+	<h5 class="text-center productname" style="width:192px;">{{p_name}}</h5>
+</div>
+{{/result}}
+</script>
+
+<!-- <div class="item" style="width:222px;">
+		<h5 class="text-center productname">{{p_id}}</h5>
+</div> -->
+
+<!-- {{#photos}}
+    {{#photo}}
+    <div class="item" style="width:222px;">
+        <img style="width:192px;" height="{{height}}" alt="{{title}}" src="http://farm{{farm}}.static.flickr.com/{{server}}/{{id}}_{{secret}}_m.jpg" />
+		<h6 class="text-center productname" style="width:192px;">{{title}}</h6>
+	</div>
+    {{/photo}}
+{{/photos}} -->
+
+<script>
+$('#container').waterfall({
+    itemCls: 'item',
+    colWidth: 222,  
+    gutterWidth: 15,
+    gutterHeight: 15,
+	maxPage: 1,
+	isFadeIn: true,
+	isAnimated: true,
+	
+	path: function( page ) {
+        return 'http://www.meigic.tw/oase/go.php';
+    },
+	params: {
+		'type': 'productlist'
+	},
+	dataType: "json",
+	
+	/*
+    path: function( page ) {
+        return 'http://api.flickr.com/services/rest/?page=' +page+ '&jsoncallback=?';
+    },
+    dataType: "jsonp",
+    jsonpCallback: "jsoncallback",
+    params: {
+        'method': 'flickr.photos.search',
+        'api_key': 'f290d9d56bd82fde0c87d7fd6a0e6c33',
+        'tags': 'travel',
+        'per_page': 20,
+        'format': 'json'
+    },
+	*/
+	
+	callbacks: {
+		loadingFinished: function($loading, isBeyondMaxPage) {
+			$( '#container' ).searchable({
+				searchField: '#container-search',
+				selector: '.item',
+				childSelector: '.productname',
+				show: function( elem ) {
+					elem.slideDown(100);
+					//elem.remove();
+					//$('#container').waterfall('reLayout');
+				},
+				hide: function( elem ) {
+					elem.slideUp( 100 );
+					//$('#container').waterfall('reLayout');
+				},
+				searchType    : 'fuzzy',
+				onSearchActive : function( elem, term ) {
+					//elem.show();
+				},
+				onSearchEmpty: function( elem ) {
+					//elem.hide();
+				},
+				onSearchFocus: function() {
+					//$( '#container-search' ).show().text( 'Type to search.' );
+				},
+				onSearchBlur: function() {
+					//$( '#container-search' ).hide();
+				},
+				clearOnLoad: true,
+				debug: true
+			});
+			if ( !isBeyondMaxPage ) {
+                $loading.fadeOut();
+            } else {
+                $loading.hide();
+                $('#page-navigation').show();
+            }
+		},
+		loadingError: function($message, xhr) {
+			$message.html(xhr + " " + xhr.status + " " + xhr.statusText);
+		}
+	}
+});
+</script>

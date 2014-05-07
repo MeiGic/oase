@@ -1,18 +1,47 @@
-/* Sticky footer styles
--------------------------------------------------- */
+/* Sticky footer styles */
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  padding-top: 10px;
+  /* Margin bottom by header height */
+  margin-top: 60px;
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  font-family: readable;
+  -webkit-font-smoothing: antialiased;
 }
 
-body, h1, h2, h3, h4, h5, h6, li, .btn {
-  font-family: "Microsoft JhengHei", "Raleway";
+h1, h2, h3, h4, h5, h6, .btn {
+  font-family: readable;
+  -webkit-font-smoothing: antialiased;
+}
+
+.brand
+{
+  background: url(../images/logo-lg.png) no-repeat center center;
+  background-size: 57px 57px;
+  width: 80px;
+  height: 57px;
+}
+
+/* Center the nav bar */
+.center.navbar .nav,
+.center.navbar .nav > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    *zoom:1; /* hasLayout ie7 trigger */
+    vertical-align: top;
+}
+
+.center .navbar-inner {
+    text-align:center;
+}
+
+.center .dropdown-menu {
+    text-align: left;
 }
 
 .watermark {
@@ -20,6 +49,11 @@ body, h1, h2, h3, h4, h5, h6, li, .btn {
   right: 20%;
   bottom:  10%;
   font-size: 500%;
+}
+
+.header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
 
 .footer {
@@ -80,7 +114,7 @@ body, h1, h2, h3, h4, h5, h6, li, .btn {
   border-radius: 5px 5px 0 0;
 }
 .nav-justified > li:last-child > a {
-  #border-bottom: 0;
+  /* border-bottom: 0; */
   border-radius: 0 0 5px 5px;
 }
 

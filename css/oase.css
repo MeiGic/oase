@@ -24,6 +24,16 @@ h1, h2, h3, h4, h5, h6, .btn {
   background-size: 57px 57px;
   width: 80px;
   height: 57px;
+  display: inline-block;
+}
+
+.brand-xs
+{
+  background: url(../images/logo-lg.png) no-repeat center center;
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
 }
 
 /* Center the nav bar */

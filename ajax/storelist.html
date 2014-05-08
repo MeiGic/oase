@@ -1,3 +1,18 @@
-<div class="text-right text-muted watermark">
-	施工中<br>(´・ω・`)
+<br>
+<br>
+<div class="row text-center">
+	<div id="controls" style="max-height:600px" class="col-lg-6"></div>
+	<br>
+	<div id="gmap-menu" style="height:600px" class="col-lg-6"></div>
 </div>
+<script>
+	$(function() {
+		new Maplace({
+			locations: {},
+			map_div: '#gmap-menu',
+			controls_div: '#controls',
+			controls_type: 'list',
+			controls_on_map: false
+		}).Load(); 
+	});
+</script>

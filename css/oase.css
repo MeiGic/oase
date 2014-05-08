@@ -38,6 +38,22 @@ h1, h2, h3, h4, h5, h6, .btn, .nav {
   vertical-align: middle;
 }
 
+.fa-huge {
+  font-size: 2em;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.ullist li.active a {
+	font-weight: bold;
+}
+
+.ullist li.active a,
+.ullist li a:hover {
+	color: #B82200 !important;
+	background-color: #eee !important;
+}
+
 /* Center the nav bar */
 .navbar .navbar-nav {
   display: inline-block;

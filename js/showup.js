@@ -15,7 +15,7 @@
     var down           = options.down        || 'navbar-hide';
     var up             = options.up          || 'navbar-show';
     var btnHideShow    = options.btnHideShow || '.btn-hide-show';
-    var hideOffset     = options.offset      || 110;
+    var hideOffset     = options.offset      || 0;
     var previousScroll = 0;
 
     $(window).scroll(function () {
@@ -23,6 +23,10 @@
     });
 	
 	$(window).resize(function () {
+      checkScrollTop();
+    });
+	
+	$(document).resize(function () {
       checkScrollTop();
     });
 	

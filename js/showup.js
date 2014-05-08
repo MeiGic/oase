@@ -40,17 +40,17 @@
         if (currentScroll > previousScroll) {
 			//console.log("DOWN");
           // Action on scroll down
-		  target.fadeOut("slow");
-		  //target.removeClass(up).addClass(down);
+		  //target.fadeOut("slow");
+		  target.removeClass(up).addClass(down);
         } else if (currentScroll < previousScroll) {
 			//console.log("UP");
           // Action on scroll up
-		  target.fadeIn("slow");
-		  //target.removeClass(down).addClass(up);
+		  //target.fadeIn("slow");
+		  target.removeClass(down).addClass(up);
         }
       } else if (currentScroll == 0) {
-		//target.removeClass(down).addClass(up);
-		target.fadeIn("slow");
+		target.removeClass(down).addClass(up);
+		//target.fadeIn("slow");
 	  }
       previousScroll = $(this).scrollTop();
 	}

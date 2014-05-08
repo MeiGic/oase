@@ -7,16 +7,25 @@
 		</div>
 	</div>
 	<br>
-	<div id="gmap-menu" style="height:600px" class="col-lg-6"></div>
+	<div id="gmap-menu" class="col-lg-6 well"></div>
 </div>
 <script>
-	$(function() {
+	$( document ).ready(function() {
+		$("#gmap-menu").height($(window).height() * 0.6);
 		new Maplace({
-			locations: {},
+			//locations: {},
 			map_div: '#gmap-menu',
 			controls_div: '#controls',
 			controls_type: 'list',
-			controls_on_map: false
-		}).Load(); 
+			controls_on_map: false,
+			map_options: {
+				zoom: 8,
+				set_center: [24, 120.80],
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			}
+		}).Load();
+	});
+	$(window).resize(function() {
+		$("#gmap-menu").height($(window).height() * 0.6);
 	});
 </script>

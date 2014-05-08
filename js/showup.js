@@ -17,31 +17,41 @@
     var btnHideShow    = options.btnHideShow || '.btn-hide-show';
     var hideOffset     = options.offset      || 0;
     var previousScroll = 0;
+	var isHide		   = false;
 
     $(window).scroll(function () {
-      checkScrollTop();
+		checkScrollTop();
     });
 	
 	$(window).resize(function () {
-      checkScrollTop();
+		checkScrollTop();
     });
 	
-	$(document).resize(function () {
-      checkScrollTop();
+	$(window).mousewheel(function () {
+		checkScrollTop();
     });
 	
 	function checkScrollTop()
 	{
-	  // var currentScroll = $(this).scrollTop();
-      if ($(this).scrollTop() > hideOffset) {
-        if ($(this).scrollTop() > previousScroll) {
+		target.clearQueue();
+		target.stop();
+	  var currentScroll = $(this).scrollTop();
+      if (currentScroll > hideOffset) {
+        if (currentScroll > previousScroll) {
+			//console.log("DOWN");
           // Action on scroll down
-          target.removeClass(up).addClass(down);
-        } else {
+		  target.fadeOut("slow");
+		  //target.removeClass(up).addClass(down);
+        } else if (currentScroll < previousScroll) {
+			//console.log("UP");
           // Action on scroll up
-          target.removeClass(down).addClass(up);
+		  target.fadeIn("slow");
+		  //target.removeClass(down).addClass(up);
         }
-      }
+      } else if (currentScroll == 0) {
+		//target.removeClass(down).addClass(up);
+		target.fadeIn("slow");
+	  }
       previousScroll = $(this).scrollTop();
 	}
 

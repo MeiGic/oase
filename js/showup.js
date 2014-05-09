@@ -15,7 +15,7 @@
     var down           = options.down        || 'navbar-hide';
     var up             = options.up          || 'navbar-show';
     var btnHideShow    = options.btnHideShow || '.btn-hide-show';
-    var hideOffset     = options.offset      || 0;
+    var hideOffset     = options.offset      || 60;
     var previousScroll = 0;
 	var isHide		   = false;
 
@@ -48,9 +48,9 @@
 		  //target.fadeIn("slow");
 		  target.removeClass(down).addClass(up);
         }
-      } else if (currentScroll == 0) {
-		target.removeClass(down).addClass(up);
+      } else {
 		//target.fadeIn("slow");
+		target.removeClass(down).addClass(up);
 	  }
       previousScroll = $(this).scrollTop();
 	}

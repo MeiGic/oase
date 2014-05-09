@@ -39,7 +39,11 @@
 		</div>
 	</div>
 	<!-- construct the carousel -->
-	<script>$('.m-carousel').carousel()</script>
+	<script>
+	$( document ).ready(function() {
+		$('.m-carousel').carousel();
+	});
+	</script>
 	<!-- Example row of columns -->
 	<!-- <div class="row text-center">
 		<div class="panel col-lg-4">

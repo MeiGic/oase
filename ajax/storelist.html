@@ -1,29 +1,64 @@
 <br>
 <br>
-<div class="row text-center">
-	<div id="controls" style="max-height:600px" class="col-lg-6">
-		<div class="col-lg-10 col-lg-offset-2">
-			<input type="search" id="container-search" value="" class="form-control" placeholder="附近有綠洲嗎？"></input>
-		</div>
+<div class="container row text-center">
+	<div class="col-lg-6 col-lg-offset-3">
+		<input type="search" id="container-search" value="" class="form-control" placeholder="附近有綠洲嗎？"></input>
 	</div>
-	<br>
-	<div id="gmap-menu" class="col-lg-6 well"></div>
+</div>
+<br>
+<div class="container row text-center col-lg-10 col-lg-offset-1">
+	<div id="controls" style="max-height:600px; overflow-y:auto;"></div>
+	<div id="gmap-menu" class="well"></div>
 </div>
 <script>
 	$( document ).ready(function() {
-		$("#gmap-menu").height($(window).height() * 0.6);
-		new Maplace({
-			//locations: {},
-			map_div: '#gmap-menu',
-			controls_div: '#controls',
-			controls_type: 'list',
-			controls_on_map: false,
-			map_options: {
-				zoom: 8,
-				set_center: [24, 120.80],
-				mapTypeId: google.maps.MapTypeId.ROADMAP
-			}
-		}).Load();
+		var storelist = [];
+		$.getJSON("http://www.meigic.tw/oase/go.php", {type:"storelist"}, function(data) {
+			$.each(data.result, function(key, val) {
+				storelist.push({
+					lat: val.latitude,
+					lon: val.longitude,
+					title: val.u_name + val.type,
+					zoom: 15,
+					html: [
+						'<h5>' + val.u_name + val.type + '</h5>',
+						'<p>' + val.u_address + '</p>'
+					].join('')
+				})
+			});
+			$("#gmap-menu").height($(window).height() * 0.6);
+			var map;
+			map = new Maplace({
+				locations: storelist,
+				map_div: '#gmap-menu',
+				controls_div: '#controls',
+				controls_type: 'dropdown',
+				controls_on_map: true,
+				map_options: {
+					zoom: 8,
+					set_center: [24, 120.80],
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				},
+				view_all_text: "全部門市",
+			});
+			map.Load();
+			var input = /** @type {HTMLInputElement} */(document.getElementById('container-search'));
+			var searchBox = new google.maps.places.SearchBox(input);
+			google.maps.event.addListener(searchBox, 'places_changed', function() {
+				var places = searchBox.getPlaces();
+				var searchlocations = [{
+					lat: places[0].geometry.location.lat(),
+					lon: places[0].geometry.location.lng(),
+					zoom: 13,
+					title: "搜尋位置: " + input.value,
+					icon: 'http://maps.google.com/mapfiles/markerA.png'
+				}];
+				$( ".dropdown" ).remove();
+				storelist.push(searchlocations);
+				map.AddLocations(searchlocations, true);
+				map.ViewOnMap(storelist.length);
+			});
+		});	
 	});
 	$(window).resize(function() {
 		$("#gmap-menu").height($(window).height() * 0.6);

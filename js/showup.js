@@ -40,15 +40,15 @@
         if (currentScroll > previousScroll) {
           // Action on scroll down
 		  target.removeClass(up).addClass(down);
-		  $.backstretch("resize")
+		  $("body").backstretch("resize")
         } else if (currentScroll < previousScroll) {
           // Action on scroll up
 		  target.removeClass(down).addClass(up);
-		  $.backstretch("resize")
+		  $("body").backstretch("resize")
         }
       } else {
 		target.removeClass(down).addClass(up);
-		$.backstretch("resize")
+		$("body").backstretch("resize")
 	  }
       previousScroll = $(this).scrollTop();
 	}

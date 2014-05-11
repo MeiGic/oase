@@ -38,19 +38,17 @@
 	  var currentScroll = $(this).scrollTop();
       if (currentScroll > hideOffset) {
         if (currentScroll > previousScroll) {
-			//console.log("DOWN");
           // Action on scroll down
-		  //target.fadeOut("slow");
 		  target.removeClass(up).addClass(down);
+		  $.backstretch("resize")
         } else if (currentScroll < previousScroll) {
-			//console.log("UP");
           // Action on scroll up
-		  //target.fadeIn("slow");
 		  target.removeClass(down).addClass(up);
+		  $.backstretch("resize")
         }
       } else {
-		//target.fadeIn("slow");
 		target.removeClass(down).addClass(up);
+		$.backstretch("resize")
 	  }
       previousScroll = $(this).scrollTop();
 	}

@@ -1,0 +1,9 @@
+web.config
+robots.txt
+log/*.log
+
+config/config.pro.php
+
+*.sublime-project
+
+*.sublime-workspace

@@ -1,34 +1,53 @@
+var currenthash, currentpara;
+
 $( document ).ready(function() {
-	loadcontent("#header", "ajax/header.html");
-	loadcontent("#footer", "ajax/footer.html");
+	ajaxload("#header", "ajax/header.html");
+	ajaxload("#footer", "ajax/footer.html");
 	var spinner = new Spinner().spin();
 	loading.appendChild(spinner.el);
 	
+	updatehash();
+	loadpage();
+	if(currentpara.length > 1)
+		loadelse();
+	
 	$(window).hashchange( function() {
-		if(window.location.hash == '' || window.location.hash == undefined)
-			window.location.hash = 'news';
+		//console.log("hashchange");
+		var temphash = window.location.hash;
+		temphash = ( temphash.replace( /^#/, '' ) || 'blank' );
+		temppara = temphash.split('&');
 		
-		var hash = window.location.hash;
-		hash = ( hash.replace( /^#/, '' ) || 'blank' )
-		
-		$( "#error" ).html('');
-		$( "#context" ).html('');
-		
-		loadcontent("#context", "ajax/" + hash + ".html");
+		if(temppara[0] != currentpara[0]) {
+			updatehash();
+			loadpage();
+		} else {
+			updatehash();		
+			loadelse();
+		}
 	});
-	$(window).hashchange();
 });
 
-function centerContext() {
-	var offset = ($( window ).height() - $( "body" ).height()) / 6;
-	$( "#context" ).css("margin-top", 0);
-	$( "#context" ).flexVerticalCenter({
-		verticalOffset : offset
-	});
+function updatehash() {
+	//console.log("updatehash");
+	if(window.location.hash == undefined || window.location.hash == '')
+		window.location.hash = 'news';
+	
+	currenthash = window.location.hash;
+	currenthash = ( currenthash.replace( /^#/, '' ) || 'blank' );
+	currentpara = currenthash.split('&');
 }
 
-function loadcontent( id, path, completeEvent )
+function loadpage() {
+	//console.log("loadpage");
+	var page = currentpara[0];
+	$( "#error" ).html('');
+	$( "#context" ).html('');
+	ajaxload("#context", "ajax/" + page + ".html");
+}
+
+function ajaxload( id, path, completeEvent )
 {
+	//console.log("ajaxload:" + id);
 	var animatePeriod = 200;
 	
 	$( id ).clearQueue();

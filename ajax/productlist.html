@@ -1,18 +1,30 @@
 <br>
 <br>
-<div class="container row text-center">
+<div id="list" class="container">
+<div class="row text-center">
 	<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
 		<input type="search" id="container-search" value="" class="form-control" placeholder="想喝什麼？"></input>
 	</div>
 </div>
 <br>
 <div id="container"></div>
+</div>
+<div id="detail" class="container">
+	<div class="row text-center">
+		<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
+			<h2 id="productname"></h2>
+			<img id="productimg" class="well"></img>
+			<h1 id="productprice" class="text-danger"></h1>
+		</div>
+	</div>
+</div>
 <script type="text/x-handlebars-template" id="waterfall-tpl">
 {{#result}}
-<div class="item" style="width:222px;">
-	<img style="width:192px;" alt="{{p_name}}" src="{{pic_path}}" />
-	<h5 class="text-center productname" style="width:192px;">{{p_name}}</h5>
-</div>
+	<div class="item" style="width:222px;">
+		<a style="display:block" href="#productlist&{{p_id}}" onclick="loadproductdetail({{p_id}})"></a>
+		<img style="width:192px;" alt="{{p_name}}" src="{{pic_path}}" />
+		<h5 class="text-center productname" style="width:192px;">{{p_name}}</h5>
+	</div>
 {{/result}}
 </script>
 
@@ -107,5 +119,38 @@ $('#container').waterfall({
 		}
 	}
 });
+function loadelse() {
+	//console.log("loadelse");
+	if(currentpara[0] == "productlist") {
+		if(currentpara.length > 1) {
+			var id = currentpara[1];
+			//console.log(id);
+			if(id != '' || id != undefined) {
+				showdetail();
+				loadproductdetail(id);
+			} else {
+				showlist();
+			}
+		} else {
+			showlist();
+		}
+	}
+}
+function showlist() {
+	$( '#list' ).show( "blind", { direction: "left" });
+	$( '#detail' ).hide( "blind", { direction: "left" });
+}
+function showdetail() {
+	$( '#list' ).hide( "blind", { direction: "left" });
+	$( '#detail' ).show( "blind", { direction: "left" });
+}
+function loadproductdetail(pid) {
+	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist", id: pid}, function(data) {
+		//alert(data.result[0].p_name);
+		$( "#detail #productname" ).html(data.result[0].p_name);
+		$( "#detail #productimg" ).attr("src", data.result[0].pic_path);
+		$( "#detail #productprice" ).html("$" + data.result[0].price);
+	});
+}
 $('body').css('overflow-x','hidden');
 </script>

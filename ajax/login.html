@@ -2,24 +2,28 @@
 <br>
 <div class="row" style="margin-top:20px">
     <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3 text-center">
-		<form role="form">
+		<form role="form" id="loginform" action="/">
 			<fieldset>
 				<h2>請登入</h2>
 				<hr class="colorgraph"></hr>
 				<div class="form-group">
-                    <input type="email" name="email" id="email" class="form-control input-lg" placeholder="帳號或是電子郵件" tabindex="1"></input>
+                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="帳號或是電子郵件" tabindex="1" required></input>
 				</div>
 				<div class="form-group">
-                    <input type="password" name="password" id="password" class="form-control input-lg" placeholder="密碼" tabindex="2"></input>
+                    <input type="password" name="password" id="password" class="form-control input-lg" placeholder="密碼" tabindex="2" required></input>
 				</div>
 				<div class="form-group row">
 					<div class="col-xs-6 col-sm-6 col-lg-6">
-						<input type="checkbox" name="remember_me" id="remember_me" tabindex="3"></input>
-						<label class="remember_me-label" for="remember_me" checked="checked"> 記住我</label>
+						<input type="checkbox" name="remember_me" id="remember_me" tabindex="3" checked="checked"></input>
+						<label class="remember_me-label" for="remember_me"> 記住我</label>
 					</div>
 					<div class="col-xs-6 col-sm-6 col-lg-6">
 						<a href="" tabindex="4">忘記密碼？</a>
 					</div>
+				</div>
+				<div id="msg" class="row">
+					<h2 id="fail" class="text-danger"></h2>
+					<h2 id="success" class="text-success"></h2>
 				</div>
 				<hr class="colorgraph"></hr>
 				<div class="row">
@@ -34,3 +38,43 @@
 		</form>
 	</div>
 </div>
+<script>
+// Attach a submit handler to the form
+$( "#loginform" ).submit(function( event ) {
+	// Stop form from submitting normally
+	event.preventDefault();
+	
+	// Send the data using post
+	var posting = $.post( "http://www.meigic.tw/oase/login.php", $( "#loginform" ).serialize() );
+	posting.done(function( data ) {
+		$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
+			$( "#fail" ).html('');
+			$( "#success" ).html('');
+			
+			var info = data.split(":");
+			if(info[0] == "failed") {
+				if(info[1] == "user_not_found")
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 無此使用者');
+				else if(info[1] == "wrong_password")
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 密碼錯誤');
+			} else {
+				$( "#success" ).html('<i class="fa fa-check-circle"></i>');
+				if($("#remember_me").is( ':checked' ))
+					$.cookie('username', $("#username").val(), { expires: 7, path: '/' });
+				else
+					$.removeCookie('username', { path: '/' });
+			}
+			
+			$( "#msg" ).show( "blind", { direction: "down" }, "fast", function() {
+				if(info[0] == "success")
+					window.location.replace("#productlist");
+			});
+		});
+	});
+});
+$( "#msg" ).hide();
+if($.cookie('username') != undefined) {
+	$("#username").val($.cookie('username'));
+	$("#remember_me").attr('checked', true);
+}
+</script>

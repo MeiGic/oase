@@ -121,28 +121,27 @@ $('#container').waterfall({
 });
 function loadelse() {
 	//console.log("loadelse");
-	if(currentpara[0] == "productlist") {
-		if(currentpara.length > 1) {
-			var id = currentpara[1];
-			//console.log(id);
-			if(id != '' || id != undefined) {
-				showdetail();
-				loadproductdetail(id);
-			} else {
-				showlist();
-			}
+	if(currentpara[0] == "productlist" && currentpara.length > 1) {
+		var id = currentpara[1];
+		//console.log(id);
+		if(id != '' || id != undefined) {
+			showdetail();
+			loadproductdetail(id);
 		} else {
 			showlist();
 		}
+	} else {
+		showlist();
 	}
 }
 function showlist() {
-	$( '#list' ).show( "blind", { direction: "left" });
-	$( '#detail' ).hide( "blind", { direction: "left" });
+	$( '#list' ).show( "blind", { direction: "left" }, "fast");
+	$( '#detail' ).hide( "blind", { direction: "left" }, "fast");
+	$('#container').waterfall('reLayout');
 }
 function showdetail() {
-	$( '#list' ).hide( "blind", { direction: "left" });
-	$( '#detail' ).show( "blind", { direction: "left" });
+	$( '#list' ).hide( "blind", { direction: "left" }, "fast");
+	$( '#detail' ).show( "blind", { direction: "left" }, "fast");
 }
 function loadproductdetail(pid) {
 	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist", id: pid}, function(data) {
@@ -153,4 +152,5 @@ function loadproductdetail(pid) {
 	});
 }
 $('body').css('overflow-x','hidden');
+loadelse();
 </script>

@@ -1,6 +1,5 @@
 var currenthash, currentpara;
 var animatePeriod = 200;
-var sessionid;
 
 $( document ).ready(function() {
 	ajaxload("#header", "ajax/header.html");

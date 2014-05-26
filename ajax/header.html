@@ -28,7 +28,7 @@
 		<a href="#storelist"><i class="fa fa-map-marker fa-huge"></i></a>
 		<a href="#shopcart"><i class="fa fa-shopping-cart fa-huge"></i></a>
 		<a id="login" href="#login" class="hidden" title="登入"><i class="fa fa-sign-in fa-huge"></i></a>
-		<a id="logout" href="#logout" class="hidden" title="登出"><i class="fa fa-sign-out fa-huge"></i></a>
+		<a id="logout" style="cursor: pointer;" onclick="logout()" class="hidden" title="登出"><i class="fa fa-sign-out fa-huge"></i></a>
 	  </div>
 	</div>
 	<div class="navbar-collapse collapse">
@@ -38,7 +38,7 @@
 		<li><a href="#storelist"><i class="fa fa-map-marker fa-lg"></i> 店鋪</a></li>
 		<li><a href="#shopcart"><i class="fa fa-shopping-cart fa-lg"></i> 購物</a></li>
 		<li id="login" class="hidden"><a href="#login" title="登入"><i class="fa fa-sign-in fa-lg"></i></a></li>
-		<li id="logout" class="hidden"><a href="#logout" title="登出"><i class="fa fa-sign-out fa-lg"></i></a></li>
+		<li id="logout" class="hidden"><a style="cursor: pointer;" onclick="logout()" title="登出"><i class="fa fa-sign-out fa-lg"></i></a></li>
 	  </ul>
 	</div>
   </div>
@@ -49,8 +49,8 @@
 	downClass: 'navbar-show'
   });
   var url = "http://www.meigic.tw/oase/check.php?type=isloggedin";
-  if(sessionid != undefined && sessionid != '')
-	url += "&sessionid=" + sessionid;
+  if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+	url += "&sessionid=" + $.cookie('PHPSESSID');
   $.get( url, function(data) {
 	if(data == 0) {
 		$("[id=login]").removeClass('hidden');
@@ -60,4 +60,20 @@
 		$("[id=logout]").removeClass('hidden');
 	}
   });
+  function logout() {
+	bootbox.setDefaults({
+		locale: "zh-TW"
+	});
+	bootbox.confirm("您確定要登出嗎？", function(result) {
+		if (result == true) {
+			var url = "http://www.meigic.tw/oase/logout.php";
+			if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+				url += "?sessionid=" + $.cookie('PHPSESSID');
+			$.get( url, function(data) {
+				$.removeCookie('PHPSESSID', { path: '/' });
+				ajaxload("#header", "ajax/header.html");
+			});
+		}
+	});
+  }
 </script>

@@ -69,7 +69,7 @@ $( "#loginform" ).submit(function( event ) {
 			
 			$( "#msg" ).show( "blind", { direction: "down" }, "fast", function() {
 				if(info[0] == "success") {
-					sessionid = info[1];
+					$.cookie('PHPSESSID', info[1], { path: '/' });
 					ajaxload("#header", "ajax/header.html");
 					window.location.replace("#productlist");
 				}

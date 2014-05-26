@@ -135,12 +135,16 @@ function loadelse() {
 	}
 }
 function showlist() {
+	$( '#list' ).removeClass('hidden');
 	$( '#list' ).show( "blind", { direction: "left" }, "fast");
+	$( '#detail' ).addClass('hidden');
 	$( '#detail' ).hide( "blind", { direction: "left" }, "fast");
 	$('#container').waterfall('reLayout');
 }
 function showdetail() {
+	$( '#list' ).addClass('hidden');
 	$( '#list' ).hide( "blind", { direction: "left" }, "fast");
+	$( '#detail' ).removeClass('hidden');
 	$( '#detail' ).show( "blind", { direction: "left" }, "fast");
 }
 function loadproductdetail(pid) {
@@ -152,5 +156,4 @@ function loadproductdetail(pid) {
 	});
 }
 $('body').css('overflow-x','hidden');
-loadelse();
 </script>

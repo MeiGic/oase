@@ -2,53 +2,109 @@
 <br>
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3 text-center">
-		<form role="form">
+		<form role="form" id="registerform" action="/">
 			<h2>請註冊 <small>免費</small></h2>
 			<hr class="colorgraph">
-			<div class="row">
-				<div class="col-xs-12 col-sm-6 col-md-6">
-					<div class="form-group">
-                        <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="您的姓氏" tabindex="1"></input>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-6 col-md-6">
-					<div class="form-group">
-						<input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="您的名字" tabindex="2"></input>
-					</div>
-				</div>
-			</div>
 			<div class="form-group">
-				<input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="顯示名稱" tabindex="3"></input>
-			</div>
-			<div class="form-group">
-				<input type="email" name="email" id="email" class="form-control input-lg" placeholder="電子郵件" tabindex="4"></input>
+				<input type="text" name="name" id="name" class="form-control input-lg" placeholder="您的姓名" tabindex="1" required></input>
 			</div>
 			<div class="row">
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-						<input type="password" name="password" id="password" class="form-control input-lg" placeholder="密碼" tabindex="5"></input>
+                        <input type="text" name="birthday" id="birthday" class="form-control input-lg" placeholder="您的生日" tabindex="2"></input>
 					</div>
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="確認密碼" tabindex="6"></input>
+						<select type="text" name="career" id="career" class="form-control input-lg select2" data-placeholder="您的職業" placeholder="您的職業" tabindex="3">
+							<option></option>
+							<option value="student">學生</option>
+							<option value="teacher">教師</option>
+							<option value="workers">上班族</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<input type="text" name="address" id="address" class="form-control input-lg" placeholder="您的地址" tabindex="4"></input>
+			</div>
+			<div class="form-group">
+				<input type="email" name="email" id="email" class="form-control input-lg" placeholder="電子郵件即為帳號" tabindex="5" required></input>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+						<input type="password" name="password" id="password" class="form-control input-lg" placeholder="密碼" tabindex="6" required></input>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="確認密碼" tabindex="7" required></input>
 					</div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<div class="col-xs-12 col-sm-6 col-lg-6">
-					<input type="checkbox" name="t_and_c" id="t_and_c" tabindex="7"></input>
+					<input type="checkbox" name="t_and_c" id="t_and_c" tabindex="8" required></input>
 					<label class="t_and_c-label" for="t_and_c"> 我同意</label>
 				</div>
 				<div class="col-xs-12 col-sm-6 col-lg-6">
-					按下<strong class="label label-primary">註冊</strong>代表您同意<a href="#" data-toggle="modal" data-target="#t_and_c_m" tabindex="8">服務條款</a>。
+					按下<strong class="label label-primary">註冊</strong>代表您同意<a href="#" data-toggle="modal" data-target="#t_and_c_m" tabindex="9">服務條款</a>。
 				</div>
+			</div>
+			<div id="msg" class="row">
+				<h2 id="fail" class="text-danger"></h2>
+				<h2 id="success" class="text-success"></h2>
 			</div>
 			<hr class="colorgraph">
 			<div class="row">
-				<div class="col-xs-6 col-md-6"><input type="submit" value="註冊" class="btn btn-primary btn-block btn-lg" tabindex="9"></div>
-				<div class="col-xs-6 col-md-6"><a href="#login" class="btn btn-success btn-block btn-lg" tabindex="10">登入</a></div>
+				<div class="col-xs-6 col-md-6"><input type="submit" value="註冊" class="btn btn-primary btn-block btn-lg" tabindex="10"></div>
+				<div class="col-xs-6 col-md-6"><a href="#login" class="btn btn-success btn-block btn-lg" tabindex="11">登入</a></div>
 			</div>
 		</form>
 	</div>
 </div>
+<script>
+$('#birthday').datepicker({
+	format: 'yyyy-mm-dd',
+	autoclose: true
+});
+$("#career").select2({
+});
+// Attach a submit handler to the form
+$( "#registerform" ).submit(function( event ) {
+	// Stop form from submitting normally
+	event.preventDefault();
+	
+	// Send the data using post
+	var posting = $.post( "http://www.meigic.tw/oase/register.php", $( "#registerform" ).serialize() );
+	posting.done(function( data ) {
+		$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
+			$( "#fail" ).html('');
+			$( "#success" ).html('');
+			
+			var info = data.split(":");
+			if(info[0] == "failed") {
+				if(info[1] == "password_confirmation_failed")
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 密碼確認失敗');
+				else if(info[1] == "insert_failed")
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 註冊失敗');
+				else if(info[1] == "account_name_overlap")
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 帳號重複');
+				else
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 未知錯誤');
+			} else {
+				$( "#success" ).html('<i class="fa fa-check-circle"></i> 成功');
+			}
+			
+			$( "#msg" ).show( "blind", { direction: "down" }, "fast", function() {
+				if(info[0] == "success") {
+					$.cookie('username', $("#email").val(), { expires: 7, path: '/' });
+					window.location.replace("#login");
+				}
+			});
+		});
+	});
+});
+$( "#msg" ).hide();
+</script>

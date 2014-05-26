@@ -1,5 +1,6 @@
 var currenthash, currentpara;
 var animatePeriod = 200;
+var sessionid;
 
 $( document ).ready(function() {
 	ajaxload("#header", "ajax/header.html");
@@ -9,7 +10,7 @@ $( document ).ready(function() {
 	
 	updatehash();
 	loadpage(function onComplete() {
-		if(currentpara.length > 1 && loadelse != undefined)
+		if(typeof loadelse != 'undefined')
 			loadelse();
 	});
 	
@@ -21,7 +22,10 @@ $( document ).ready(function() {
 		
 		if(temppara[0] != currentpara[0]) {
 			updatehash();
-			loadpage();
+			loadpage(function onComplete() {
+				if(typeof loadelse != 'undefined')
+					loadelse();
+			});
 		} else {
 			updatehash();		
 			loadelse();
@@ -44,7 +48,7 @@ $( document ).ajaxError(function( event, jqxhr, settings, exception ) {
 
 function updatehash() {
 	//console.log("updatehash");
-	if(window.location.hash == undefined || window.location.hash == '')
+	if(typeof window.location.hash == 'undefined' || window.location.hash == '')
 		window.location.hash = 'news';
 	
 	currenthash = window.location.hash;
@@ -63,7 +67,6 @@ function loadpage(completeEvent) {
 function ajaxload( id, path, completeEvent )
 {
 	//console.log("ajaxload:" + id);
-	
 	$( id ).clearQueue();
     $( id ).stop();
 
@@ -80,7 +83,7 @@ function ajaxload( id, path, completeEvent )
 			$( "#loading" ).animate({opacity: 0}, animatePeriod);
 			$( "#loading" ).addClass("hidden"); //hide loading animation
 			
-			if(completeEvent != undefined)
+			if(typeof completeEvent != 'undefined')
 				completeEvent();
 		});
 	});

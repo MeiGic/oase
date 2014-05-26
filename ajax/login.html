@@ -57,8 +57,10 @@ $( "#loginform" ).submit(function( event ) {
 					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 無此使用者');
 				else if(info[1] == "wrong_password")
 					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 密碼錯誤');
+				else
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 未知錯誤');
 			} else {
-				$( "#success" ).html('<i class="fa fa-check-circle"></i>');
+				$( "#success" ).html('<i class="fa fa-check-circle"></i> 成功');
 				if($("#remember_me").is( ':checked' ))
 					$.cookie('username', $("#username").val(), { expires: 7, path: '/' });
 				else
@@ -66,8 +68,11 @@ $( "#loginform" ).submit(function( event ) {
 			}
 			
 			$( "#msg" ).show( "blind", { direction: "down" }, "fast", function() {
-				if(info[0] == "success")
+				if(info[0] == "success") {
+					sessionid = info[1];
+					ajaxload("#header", "ajax/header.html");
 					window.location.replace("#productlist");
+				}
 			});
 		});
 	});

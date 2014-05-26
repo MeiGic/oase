@@ -27,7 +27,8 @@
 		<a href="#productlist"><i class="fa fa-beer fa-huge"></i></a>
 		<a href="#storelist"><i class="fa fa-map-marker fa-huge"></i></a>
 		<a href="#shopcart"><i class="fa fa-shopping-cart fa-huge"></i></a>
-		<a href="#login"><i class="fa fa-sign-in fa-huge"></i></a>
+		<a id="login" href="#login" class="hidden" title="登入"><i class="fa fa-sign-in fa-huge"></i></a>
+		<a id="logout" href="#logout" class="hidden" title="登出"><i class="fa fa-sign-out fa-huge"></i></a>
 	  </div>
 	</div>
 	<div class="navbar-collapse collapse">
@@ -36,7 +37,8 @@
 		<li><a href="#productlist"><i class="fa fa-beer fa-lg"></i> 飲品</a></li>
 		<li><a href="#storelist"><i class="fa fa-map-marker fa-lg"></i> 店鋪</a></li>
 		<li><a href="#shopcart"><i class="fa fa-shopping-cart fa-lg"></i> 購物</a></li>
-		<li><a href="#login"><i class="fa fa-sign-in fa-lg"></i></a></li>
+		<li id="login" class="hidden"><a href="#login" title="登入"><i class="fa fa-sign-in fa-lg"></i></a></li>
+		<li id="logout" class="hidden"><a href="#logout" title="登出"><i class="fa fa-sign-out fa-lg"></i></a></li>
 	  </ul>
 	</div>
   </div>
@@ -45,5 +47,17 @@
   $().showUp('.navbar', {
 	upClass: 'navbar-hide',
 	downClass: 'navbar-show'
+  });
+  var url = "http://www.meigic.tw/oase/check.php?type=isloggedin";
+  if(sessionid != undefined && sessionid != '')
+	url += "&sessionid=" + sessionid;
+  $.get( url, function(data) {
+	if(data == 0) {
+		$("[id=login]").removeClass('hidden');
+		$("[id=logout]").addClass('hidden');
+	} else {
+		$("[id=login]").addClass('hidden');
+		$("[id=logout]").removeClass('hidden');
+	}
   });
 </script>

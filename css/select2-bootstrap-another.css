@@ -84,7 +84,7 @@
 
 .select2-container.input-lg .select2-choice,
 .input-group-lg .select2-container .select2-choice {
-  height: 45px;
+  height: 57px;
   line-height: 1.33;
   border-radius: 6px;
 }
@@ -133,7 +133,7 @@
 .input-group-lg .select2-choice > span:first-child,
 .input-lg .select2-choices .select2-search-field input,
 .input-group-lg .select2-choices .select2-search-field input {
-  padding: 10px 16px;
+  padding: 14px 16px;
 }
 
 .select2-container-multi .select2-choices .select2-search-choice {
@@ -205,14 +205,14 @@
 .input-group-lg .select2-container .select2-choice .select2-arrow b,
 .select2-container.input-lg .select2-choice div b,
 .input-group-lg .select2-container .select2-choice div b {
-  background-position: 0 9px;
+  background-position: 0 15px;
 }
 
 .select2-dropdown-open.input-lg .select2-choice .select2-arrow b,
 .input-group-lg .select2-dropdown-open .select2-choice .select2-arrow b,
 .select2-dropdown-open.input-lg .select2-choice div b,
 .input-group-lg .select2-dropdown-open .select2-choice div b {
-  background-position: -18px 9px;
+  background-position: -18px 15px;
 }
 
 /**

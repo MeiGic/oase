@@ -96,6 +96,15 @@ h1, h2, h3, h4, h5, h6, .btn, .nav {
   border-top: 1px solid #eee;
 }
 
+table,
+thead,
+tr,
+tbody,
+th,
+td {
+	text-align: center;
+}
+
 /* Main marketing message and sign up button */
 .jumbotron {
   text-align: center;

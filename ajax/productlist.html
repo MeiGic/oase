@@ -10,12 +10,12 @@
 <div id="container"></div>
 </div>
 <div id="detail" class="container">
-	<div class="row text-center col-lg-8 col-lg-offset-2">
-		<div class="col-lg-6">
+	<div class="row text-center">
+		<div class="col-lg-4 col-lg-offset-2">
 			<br>
-			<img id="productimg" class="well"></img>
+			<img id="productimg" class="well" width="100%"></img>
 		</div>
-		<div class="col-lg-6">
+		<div class="col-lg-4">
 			<h1 id="productname"></h1>
 			<br>
 			<form role="form">
@@ -66,9 +66,7 @@
 				</div>
 				<br>
 				<br>
-				<div class="input-control">
-					<input type="text" id="count" class="form-control" />
-				</div>
+				<input type="text" id="count" class="form-control" />
 				<h2 id="productprice" class="text-danger"></h2>
 				<button type="button" class="btn btn-lg btn-danger"><i class="fa fa-thumbs-o-up"></i> 購買</button>
 			</form>
@@ -217,7 +215,9 @@ function loadproductdetail(pid) {
 $(function () {
 	$('body').css('overflow-x','hidden');
 	$('#count').spinedit({
-		minimum: 1
+		minimum: 1,
+		maximum: 99,
+		step: 1
 	});
 });
 </script>

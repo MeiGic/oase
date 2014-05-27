@@ -1,6 +1,6 @@
 <br>
-<br>
 <div id="list" class="container">
+<br>
 <div class="row text-center">
 	<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
 		<input type="search" id="container-search" value="" class="form-control" placeholder="想喝什麼？"></input>
@@ -10,11 +10,68 @@
 <div id="container"></div>
 </div>
 <div id="detail" class="container">
-	<div class="row text-center">
-		<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
-			<h2 id="productname"></h2>
+	<div class="row text-center col-lg-8 col-lg-offset-2">
+		<div class="col-lg-6">
+			<br>
 			<img id="productimg" class="well"></img>
-			<h1 id="productprice" class="text-danger"></h1>
+		</div>
+		<div class="col-lg-6">
+			<h1 id="productname"></h1>
+			<br>
+			<form role="form">
+				<div class="btn-group-vertical" data-toggle="buttons">
+				  <label class="btn btn-success active">
+					<input type="radio" name="size" id="large"> 大杯
+				  </label>
+				  <label class="btn btn-success">
+					<input type="radio" name="size" id="medium"> 中杯
+				  </label>
+				  <label class="btn btn-success">
+					<input type="radio" name="size" id="small"> 小杯
+				  </label>
+				</div>
+				<div class="btn-group-vertical" data-toggle="buttons">
+				  <label class="btn btn-warning active">
+					<input type="radio" name="sweet" id="full"> 全糖
+				  </label>
+				  <label class="btn btn-warning">
+					<input type="radio" name="sweet" id="less"> 少糖
+				  </label>
+				  <label class="btn btn-warning">
+					<input type="radio" name="sweet" id="half"> 半糖
+				  </label>
+				  <label class="btn btn-warning">
+					<input type="radio" name="sweet" id="few"> 微糖
+				  </label>
+				  <label class="btn btn-warning">
+					<input type="radio" name="sweet" id="none"> 無糖
+				  </label>
+				</div>
+				<div class="btn-group-vertical" data-toggle="buttons">
+				  <label class="btn btn-primary active">
+					<input type="radio" name="temp" id="full" class="active"> 全冰
+				  </label>
+				  <label class="btn btn-primary">
+					<input type="radio" name="temp" id="less"> 少冰
+				  </label>
+				  <label class="btn btn-primary">
+					<input type="radio" name="temp" id="half"> 半冰
+				  </label>
+				  <label class="btn btn-primary">
+					<input type="radio" name="temp" id="few"> 微冰
+				  </label>
+				  <label class="btn btn-primary">
+					<input type="radio" name="temp" id="none"> 去冰
+				  </label>
+				</div>
+				<br>
+				<br>
+				<div class="input-control">
+					<input type="text" id="count" class="form-control" />
+				</div>
+				<h2 id="productprice" class="text-danger"></h2>
+				<button type="button" class="btn btn-lg btn-danger"><i class="fa fa-thumbs-o-up"></i> 購買</button>
+			</form>
 		</div>
 	</div>
 </div>
@@ -148,12 +205,19 @@ function showdetail() {
 	$( '#detail' ).show( "blind", { direction: "left" }, "fast");
 }
 function loadproductdetail(pid) {
+	$( "#detail #productimg" ).hide();
 	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist", id: pid}, function(data) {
 		//alert(data.result[0].p_name);
 		$( "#detail #productname" ).html(data.result[0].p_name);
 		$( "#detail #productimg" ).attr("src", data.result[0].pic_path);
-		$( "#detail #productprice" ).html("$" + data.result[0].price);
+		$( "#detail #productprice" ).html("NTD$ " + data.result[0].price);
+		$( "#detail #productimg" ).fadeIn();
 	});
 }
-$('body').css('overflow-x','hidden');
+$(function () {
+	$('body').css('overflow-x','hidden');
+	$('#count').spinedit({
+		minimum: 1
+	});
+});
 </script>

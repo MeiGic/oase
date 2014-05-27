@@ -23,30 +23,51 @@
   <div class="container">
 	<div class="navbar-header">
 	  <div class="nav navbar-nav visible-xs row text-center">
-		<a href="#news"><i class="brand"></i></a>
+		<a href="#news"><i class="brand" data-placement="left" rel="tooltip" title="OASE"></i></a>
 		<a href="#productlist"><i class="fa fa-beer fa-huge"></i></a>
 		<a href="#storelist"><i class="fa fa-map-marker fa-huge"></i></a>
 		<a href="#shopcart"><i class="fa fa-shopping-cart fa-huge"></i></a>
-		<a id="login" href="#login" class="hidden" title="登入"><i class="fa fa-sign-in fa-huge"></i></a>
-		<a id="logout" style="cursor: pointer;" onclick="logout()" class="hidden" title="登出"><i class="fa fa-sign-out fa-huge"></i></a>
+		<a id="login" href="#login" class="hidden" data-placement="right" rel="tooltip" title="登入"><i class="fa fa-sign-in fa-huge"></i></a>
+		<a id="logout" style="cursor: pointer;" class="hidden" data-placement="right" rel="tooltip" title="登出" data-toggle="modal" data-target="#logoutconfirm"><i class="fa fa-sign-out fa-huge"></i></a>
 	  </div>
 	</div>
 	<div class="navbar-collapse collapse">
 	  <ul class="nav navbar-nav">
-		<a class="navbar-brand brand" href="#news"></a>
+		<a class="navbar-brand brand" href="#news" data-placement="left" rel="tooltip" title="OASE"></a>
 		<li><a href="#productlist"><i class="fa fa-beer fa-lg"></i> 飲品</a></li>
 		<li><a href="#storelist"><i class="fa fa-map-marker fa-lg"></i> 店鋪</a></li>
 		<li><a href="#shopcart"><i class="fa fa-shopping-cart fa-lg"></i> 購物</a></li>
-		<li id="login" class="hidden"><a href="#login" title="登入"><i class="fa fa-sign-in fa-lg"></i></a></li>
-		<li id="logout" class="hidden"><a style="cursor: pointer;" onclick="logout()" title="登出"><i class="fa fa-sign-out fa-lg"></i></a></li>
+		<li id="login" class="hidden"><a href="#login" data-placement="right" rel="tooltip" title="登入"><i class="fa fa-sign-in fa-lg"></i></a></li>
+		<li id="logout" class="hidden"><a style="cursor: pointer;" data-placement="right" rel="tooltip" title="登出" data-toggle="modal" data-target="#logoutconfirm"><i class="fa fa-sign-out fa-lg"></i></a></li>
 	  </ul>
 	</div>
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="logoutconfirm" role="dialog" aria-labelledby="logout_Label" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="logout_Label">登出</h4>
+			</div>
+			<div class="modal-body">
+				<i class="fa fa-info-circle"></i> 您確定要登出嗎？
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="logout()">確定</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script>
   $().showUp('.navbar', {
 	upClass: 'navbar-hide',
 	downClass: 'navbar-show'
+  });
+  $(function(){
+	$('[rel="tooltip"]').tooltip();
   });
   var url = "http://www.meigic.tw/oase/check.php?type=isloggedin";
   if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
@@ -61,19 +82,12 @@
 	}
   });
   function logout() {
-	bootbox.setDefaults({
-		locale: "zh-TW"
-	});
-	bootbox.confirm("您確定要登出嗎？", function(result) {
-		if (result == true) {
-			var url = "http://www.meigic.tw/oase/logout.php";
-			if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
-				url += "?sessionid=" + $.cookie('PHPSESSID');
-			$.get( url, function(data) {
-				$.removeCookie('PHPSESSID', { path: '/' });
-				ajaxload("#header", "ajax/header.html");
-			});
-		}
+	var url = "http://www.meigic.tw/oase/logout.php";
+	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+		url += "?sessionid=" + $.cookie('PHPSESSID');
+	$.get( url, function(data) {
+		$.removeCookie('PHPSESSID', { path: '/' });
+		ajaxload("#header", "ajax/header.html");
 	});
   }
 </script>

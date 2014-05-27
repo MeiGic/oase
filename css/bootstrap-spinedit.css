@@ -1,7 +1,7 @@
 ﻿span.spinedit .glyphicon-chevron-down { position: relative; cursor: pointer;}
 span.spinedit .glyphicon-chevron-up { position: relative; cursor: pointer;}
 span.spinedit .glyphicon-chevron-up { top: -8px;  left: -8px; }
-span.spinedit .glyphicon-chevron-down { top: 8px; margin-right: -10px;}
+span.spinedit .glyphicon-chevron-down { top: 12px; margin-right: -10px;}
 
 .spinedit {
   padding: 6px 12px;

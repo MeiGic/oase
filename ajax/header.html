@@ -82,7 +82,9 @@
 		$("[id=login]").addClass('hidden');
 		$("[id=logout]").removeClass('hidden');
 		$("[id=shopbadge]").html(3);
-		$("[id=name]").html('測試');
+		getname(function onComplete(name) {
+			$("[id=name]").html(name);
+		});
 	}
   });
   function logout() {
@@ -92,6 +94,18 @@
 	$.get( url, function(data) {
 		$.removeCookie('PHPSESSID', { path: '/' });
 		ajaxload("#header", "ajax/header.html");
+	});
+  }
+  function getname(onCompleteEvent) {
+	var url = "http://www.meigic.tw/oase/get.php?type=name";
+	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+		url += "&sessionid=" + $.cookie('PHPSESSID');
+	$.get( url, function(data) {
+		var info = data.split(":");
+			if(info[0] == "success")
+				onCompleteEvent(info[1]);
+			else
+				alert(data);
 	});
   }
 </script>

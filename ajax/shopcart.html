@@ -1,113 +1,117 @@
 <br>
 <br>
 <div class="container col-lg-10 col-lg-offset-1">
-	<div class="panel panel-default">
-		<table id="ordertable" class="table table-responsive table-hover text-center">      
-			<thead class="text-center">
+	<div id="orderdiv">
+		<div class="panel panel-default">
+			<table id="ordertable" class="table table-responsive table-hover text-center footable toggle-circle-filled">      
+				<thead class="text-center">
 					<th>飲品</th>
 					<th>大小</th>
-					<th>甜度</th>
-					<th>冰塊</th>
-					<th>加料</th>
+					<th data-hide="phone">甜度</th>
+					<th data-hide="phone">冰塊</th>
+					<th data-hide="phone">加料</th>
 					<th>數量</th>
 					<th>價格</th>
 					<th></th>
 				</thead>
-			<tbody>
-	
-			<tr>
-			<td>珍珠奶茶</td>
-			<td>大杯</td>
-			<td>半糖</td>
-			<td>少冰</td>
-			<td>粉條</td>
-			<td>1</td>
-			<td>$40</td>
-			<td><p><a class="text-danger" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td>
-			</tr>
-			
-			<tr>
-			<td>珍珠奶茶</td>
-			<td>大杯</td>
-			<td>半糖</td>
-			<td>少冰</td>
-			<td></td>
-			<td>1</td>
-			<td>$40</td>
-			<td><p><a class="text-danger" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td>
-			</tr>
-			
-			<tr>
-			<td>珍珠奶茶</td>
-			<td>大杯</td>
-			<td>半糖</td>
-			<td>少冰</td>
-			<td></td>
-			<td>1</td>
-			<td>$40</td>
-			<td><p><a class="text-danger" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td>
-			</tr>
-			
-			</tbody>
-		</table>	
-		<div class="panel-footer text-right">
-			<span class="label label-primary">總計：3杯</span>
-			<span class="label label-danger">小計：$120</span>
-			<button type="button" class="btn btn-success">結帳 <i class="fa fa-chevron-circle-right"></i></button>
+				<tbody>
+		
+				<tr>
+				<td>珍珠奶茶</td>
+				<td>大杯</td>
+				<td>半糖</td>
+				<td>少冰</td>
+				<td>粉條</td>
+				<td>1</td>
+				<td>$40</td>
+				<td><p><a class="text-danger row-delete" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td>
+				</tr>
+				
+				<tr>
+				<td>珍珠奶茶</td>
+				<td>大杯</td>
+				<td>半糖</td>
+				<td>少冰</td>
+				<td></td>
+				<td>1</td>
+				<td>$40</td>
+				<td><p><a class="text-danger row-delete" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td>
+				</tr>
+				
+				<tr>
+				<td>珍珠奶茶</td>
+				<td>大杯</td>
+				<td>半糖</td>
+				<td>少冰</td>
+				<td></td>
+				<td>1</td>
+				<td>$40</td>
+				<td><p><a class="text-danger row-delete" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td>
+				</tr>
+				
+				</tbody>
+			</table>	
+			<div class="panel-footer text-right">
+				<span class="label label-primary">總計：<span id="count">0</span>杯</span>
+				<span class="label label-danger">小計：NTD$<span id="sum">0</span></span>
+				<button type="button" class="btn btn-success">結帳 <i class="fa fa-chevron-circle-right"></i></button>
+			</div>
 		</div>
 	</div>
-	<div class="row text-center">
-		<h2>歷史</h2>
-	</div>
-	<div class="panel panel-default">
-		<table id="recordtable" class="table table-hover text-center">      
-			<thead class="text-center">
+	<div id="recorddiv">
+		<div class="row text-center">
+			<h2>歷史</h2>
+		</div>
+		<div class="panel panel-default">
+			<table id="recordtable" class="table table-hover text-center footable toggle-circle-filled">      
+				<thead class="text-center">
 					<th>飲品</th>
 					<th>大小</th>
-					<th>甜度</th>
-					<th>冰塊</th>
-					<th>加料</th>
+					<th data-hide="phone">甜度</th>
+					<th data-hide="phone">冰塊</th>
+					<th data-hide="phone">加料</th>
 					<th>數量</th>
 					<th>價格</th>
 					<th></th>
 				</thead>
-			<tbody>
-	
-			<tr>
-			<td>珍珠奶茶</td>
-			<td>大杯</td>
-			<td>半糖</td>
-			<td>少冰</td>
-			<td>粉條</td>
-			<td>1</td>
-			<td>$40</td>
-			<td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td>
-			</tr>
-			
-			<tr>
-			<td>珍珠奶茶</td>
-			<td>大杯</td>
-			<td>半糖</td>
-			<td>少冰</td>
-			<td></td>
-			<td>1</td>
-			<td>$40</td>
-			<td><p><a class="text-primary" style="cursor: pointer;" data-placement="top" rel="tooltip" title="配送中"><i class="fa fa-truck"></i></a></p></td>
-			</tr>
-			
-			<tr>
-			<td>珍珠奶茶</td>
-			<td>大杯</td>
-			<td>半糖</td>
-			<td>少冰</td>
-			<td></td>
-			<td>1</td>
-			<td>$40</td>
-			<td><p><a class="text-warning" style="cursor: pointer;" data-placement="top" rel="tooltip" title="製作中"><i class="fa fa-tasks"></i></a></p></td>
-			</tr>
-			
-			</tbody>
-		</table>
+				<tbody>
+		
+				<tr>
+				<td>珍珠奶茶</td>
+				<td>大杯</td>
+				<td>半糖</td>
+				<td>少冰</td>
+				<td>粉條</td>
+				<td>1</td>
+				<td>$40</td>
+				<td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td>
+				</tr>
+				
+				<tr>
+				<td>珍珠奶茶</td>
+				<td>大杯</td>
+				<td>半糖</td>
+				<td>少冰</td>
+				<td></td>
+				<td>1</td>
+				<td>$40</td>
+				<td><p><a class="text-primary" style="cursor: pointer;" data-placement="top" rel="tooltip" title="配送中"><i class="fa fa-truck"></i></a></p></td>
+				</tr>
+				
+				<tr>
+				<td>珍珠奶茶</td>
+				<td>大杯</td>
+				<td>半糖</td>
+				<td>少冰</td>
+				<td></td>
+				<td>1</td>
+				<td>$40</td>
+				<td><p><a class="text-warning" style="cursor: pointer;" data-placement="top" rel="tooltip" title="製作中"><i class="fa fa-tasks"></i></a></p></td>
+				</tr>
+				
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
     
@@ -119,10 +123,11 @@
 				<h4 class="modal-title custom_align" id="Heading">取消訂單</h4>
 			</div>
 			<div class="modal-body">
-				<div class=""><i class="fa fa-exclamation-circle"></i> 你確定要取消此筆訂單嗎？</div> 
+				<div><i class="fa fa-exclamation-circle"></i> 你確定要取消此筆訂單嗎？</div>
+				<h4 id="deleterowname"></h4>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" data-dismiss="modal">確定</button>
+				<button type="button" id="confirmrowdelete" class="btn btn-danger" data-dismiss="modal">確定</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
 		</div>
@@ -132,7 +137,51 @@
 </div>
 
 <script>
-$(function(){
-   $('[rel="tooltip"]').tooltip();
+$('[rel="tooltip"]').tooltip();
+$("#ordertable").footable();
+$("#recordtable").footable();
+updateTable("#ordertable", "#orderdiv");
+updateTable("#recordtable", "#recorddiv");
+updateOrderInfo();
+$('table').footable().on('click', '.row-delete', function(e) {
+    e.preventDefault();
+    //get the footable object
+    var footable = $('table').data('footable');
+
+    //get the row we are wanting to delete
+    var row = $(this).parents('tr:first');
+	
+	$("#deleterowname").html("<table>" + row.html() + "</table>");
+	
+	$('#confirmrowdelete').click(function() {
+		$(row).find('td')
+			.wrapInner('<div style="display: block;" />')
+			.parent()
+			.find('td > div')
+			.slideUp(function(){
+			//delete the row
+			footable.removeRow(row);
+			updateTable("#ordertable", "#orderdiv");
+			updateTable("#recordtable", "#recorddiv");
+			updateOrderInfo();
+		});
+	});
 });
+function updateTable(tableid, divid) {
+	if($(tableid + " tr").length <= 1) {
+		$(divid).slideUp();
+	}
+}
+function updateOrderInfo() {
+	var count = 0;
+	var sum = 0;
+	$("#ordertable tr").each(function() {
+		if($.isNumeric(count)) {
+			count += +($(this).children('td:eq(5)').text());
+			sum += +($(this).children('td:eq(6)').text().substring(1));
+		}
+	});
+	$("#count").html(count);
+	$("#sum").html(sum);
+}
 </script>

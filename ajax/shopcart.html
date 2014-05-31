@@ -54,7 +54,7 @@
 			<div class="panel-footer text-right">
 				<span class="label label-primary">總計：<span id="count">0</span>杯</span>
 				<span class="label label-danger">小計：NTD$<span id="sum">0</span></span>
-				<button type="button" class="btn btn-success">結帳 <i class="fa fa-chevron-circle-right"></i></button>
+				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#order">結帳 <i class="fa fa-chevron-circle-right"></i></button>
 			</div>
 		</div>
 	</div>
@@ -124,10 +124,30 @@
 			</div>
 			<div class="modal-body">
 				<div><i class="fa fa-exclamation-circle"></i> 你確定要取消此筆訂單嗎？</div>
-				<h4 id="deleterowname"></h4>
+				<h4 id="deleterowdetail"></h4>
 			</div>
 			<div class="modal-footer">
 				<button type="button" id="confirmrowdelete" class="btn btn-danger" data-dismiss="modal">確定</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	<!-- /.modal-content --> 
+	</div>
+<!-- /.modal-dialog --> 
+</div>
+
+<div class="modal fade" id="order" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title custom_align" id="Heading">結帳</h4>
+			</div>
+			<div class="modal-body">
+				<div><i class="fa fa-info-circle"></i> 請填寫以下資訊完成結帳</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="confirmorder" class="btn btn-success" data-dismiss="modal">完成！</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
 		</div>
@@ -151,9 +171,19 @@ $('table').footable().on('click', '.row-delete', function(e) {
     //get the row we are wanting to delete
     var row = $(this).parents('tr:first');
 	
-	$("#deleterowname").html("<table>" + row.html() + "</table>");
+	var thead = $("#ordertable thead:first").html();
 	
-	$('#confirmrowdelete').click(function() {
+	var deletedetail = "";
+	$(row).children('td').each(function(i) {
+		if(i < 6) {
+			deletedetail += $(thead).children("th").eq(i).html() + ": ";
+			deletedetail += $(this).text() + "<br>";
+		}
+	});
+	
+	$("#deleterowdetail").html(deletedetail);
+	
+	$('#confirmrowdelete').off("click").click(function() {
 		$(row).find('td')
 			.wrapInner('<div style="display: block;" />')
 			.parent()

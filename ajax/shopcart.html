@@ -1,6 +1,10 @@
 <br>
 <br>
 <div class="container col-lg-10 col-lg-offset-1">
+	<div id="nothing" class="jumbotron">
+		<h2>這裡是空的</h2>
+		<a class="btn btn-lg btn-danger" href="#productlist" role="button">馬上買一杯！</a>
+	</div>
 	<div id="orderdiv">
 		<div class="panel panel-default">
 			<table id="ordertable" class="table table-responsive table-hover text-center footable toggle-circle-filled">      
@@ -16,7 +20,7 @@
 				</thead>
 				<tbody>
 		
-				<tr>
+				<!-- <tr>
 				<td>珍珠奶茶</td>
 				<td>大杯</td>
 				<td>半糖</td>
@@ -47,7 +51,7 @@
 				<td>1</td>
 				<td>$40</td>
 				<td><p><a class="text-danger row-delete" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td>
-				</tr>
+				</tr> -->
 				
 				</tbody>
 			</table>	
@@ -76,7 +80,7 @@
 				</thead>
 				<tbody>
 		
-				<tr>
+				<!-- <tr>
 				<td>珍珠奶茶</td>
 				<td>大杯</td>
 				<td>半糖</td>
@@ -107,7 +111,7 @@
 				<td>1</td>
 				<td>$40</td>
 				<td><p><a class="text-warning" style="cursor: pointer;" data-placement="top" rel="tooltip" title="製作中"><i class="fa fa-tasks"></i></a></p></td>
-				</tr>
+				</tr> -->
 				
 				</tbody>
 			</table>
@@ -160,9 +164,10 @@
 $('[rel="tooltip"]').tooltip();
 $("#ordertable").footable();
 $("#recordtable").footable();
-updateTable("#ordertable", "#orderdiv");
+$("#nothing").hide();
+$("#orderdiv").hide();
+$("#recorddiv").hide();
 updateTable("#recordtable", "#recorddiv");
-updateOrderInfo();
 $('table').footable().on('click', '.row-delete', function(e) {
     e.preventDefault();
     //get the footable object
@@ -184,22 +189,46 @@ $('table').footable().on('click', '.row-delete', function(e) {
 	$("#deleterowdetail").html(deletedetail);
 	
 	$('#confirmrowdelete').off("click").click(function() {
+		var url = "http://www.meigic.tw/oase/shopcart.php?type=remove_temp_order&index=" + row[0].rowIndex;
+		if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+			url += "&sessionid=" + $.cookie('PHPSESSID');
+		$.get( url, function(data) {
+			var info = data.split(":");
+				if(info[0] == "success") {
+					$.cookie('PHPSESSID', info[1], { path: '/' });
+				}
+		});
+	
 		$(row).find('td')
 			.wrapInner('<div style="display: block;" />')
 			.parent()
 			.find('td > div')
 			.slideUp(function(){
+			
 			//delete the row
 			footable.removeRow(row);
-			updateTable("#ordertable", "#orderdiv");
+			
+			updateTable("#ordertable", "#orderdiv", function(hide) {
+				if(hide)
+					$("#nothing").slideDown();
+				else
+					$("#nothing").hide();
+			});
 			updateTable("#recordtable", "#recorddiv");
 			updateOrderInfo();
+			ajaxload("#header", "ajax/header.html");
 		});
 	});
 });
-function updateTable(tableid, divid) {
+function updateTable(tableid, divid, onCompleteEvent) {
 	if($(tableid + " tr").length <= 1) {
 		$(divid).slideUp();
+		if(onCompleteEvent)
+			onCompleteEvent(true);
+	} else {
+		$(divid).slideDown();
+		if(onCompleteEvent)
+			onCompleteEvent(false);
 	}
 }
 function updateOrderInfo() {
@@ -213,5 +242,78 @@ function updateOrderInfo() {
 	});
 	$("#count").html(count);
 	$("#sum").html(sum);
+}
+getspecialorderlist();
+var specialorderlist = [];
+function getspecialorderlist() {
+	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"specialorderlist"}, function(data) {
+		specialorderlist = data.result;
+		getproductlist();
+	});
+}
+var productlist = [];
+function getproductlist() {
+	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist"}, function(data) {
+		productlist = data.result;
+		getorderlist();
+	});
+}
+function getorderlist() {
+	$.getJSON("http://www.meigic.tw/oase/shopcart.php", {sessionid:$.cookie('PHPSESSID'), type:"get_temp_order"}, function(data) {
+		//get the footable object
+		var footable = $('#ordertable').data('footable');
+		var orderdata = data;
+		if(orderdata.length > 0 && productlist.length > 0 && specialorderlist.length > 0) {
+			$.each(orderdata, function(key, val) {
+				var matchproduct;
+				for(var i = 0; i < productlist.length; i++) {
+					if(productlist[i].p_id == val.p_id) {
+						matchproduct = productlist[i];
+						break;
+					}
+				}
+				if(typeof matchproduct != 'undefined') {
+					var productname = matchproduct.p_name;
+					var productprice = +(matchproduct.price);
+					var size = val.size;
+					var sweet = +(val.sweet);
+					var temp = +(val.temp);
+					var specialorderarray = val.so_id.split(',');
+					var matchspecialorderlist = [];
+					var specialorderstring = [];
+					var specialorderprice = 0;
+					$.each(specialorderarray, function(index, so_id) {
+						for(var i = 0; i < specialorderlist.length; i++) {
+							if(specialorderlist[i].so_id == so_id) {
+								matchspecialorderlist.push(specialorderlist[i]);
+								specialorderstring.push(specialorderlist[i].so_name);
+								specialorderprice += +(specialorderlist[i].price);
+								break;
+							}
+						}
+					});
+					specialorderstring = specialorderstring.join("、");
+					var count = +(val.count);
+					var sum = (productprice + specialorderprice) * count;
+					
+					var sizestringarray = {S:"小杯",M:"中杯",L:"大杯"};
+					var sweetstringarray = ["無糖","微糖","半糖","少糖","全糖"];
+					var tempstringarray = ["去冰","微冰","半冰","少冰","全冰"];
+					
+					var neworder = '<tr><td>' + productname + '</td><td>' + sizestringarray[size] + '</td><td>' + sweetstringarray[sweet - 1] + '</td><td>' + tempstringarray[temp - 1] + '</td><td>' + specialorderstring + '</td><td>' + count + '</td><td>$' + sum + '</td><td><p><a class="text-danger row-delete" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td></tr>';
+					//console.log(neworder);
+					//orderlist.push(neworder);
+					footable.appendRow(neworder);
+				}
+			});
+		}
+		updateOrderInfo();
+		updateTable("#ordertable", "#orderdiv", function(hide) {
+			if(hide)
+				$("#nothing").slideDown();
+			else
+				$("#nothing").hide();
+		});
+	});
 }
 </script>

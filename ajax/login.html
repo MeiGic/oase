@@ -44,8 +44,12 @@ $( "#loginform" ).submit(function( event ) {
 	// Stop form from submitting normally
 	event.preventDefault();
 	
+	var url = "http://www.meigic.tw/oase/login.php";
+	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+		url += "?sessionid=" + $.cookie('PHPSESSID');
+	
 	// Send the data using post
-	var posting = $.post( "http://www.meigic.tw/oase/login.php", $( "#loginform" ).serialize() );
+	var posting = $.post( url, $( "#loginform" ).serialize() );
 	posting.done(function( data ) {
 		$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
 			$( "#fail" ).html('');

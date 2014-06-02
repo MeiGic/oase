@@ -76,16 +76,20 @@
 	if(data == 0) {
 		$("[id=login]").removeClass('hidden');
 		$("[id=logout]").addClass('hidden');
-		$("[id=shopbadge]").html('');
 		$("[id=name]").html('');
 	} else {
 		$("[id=login]").addClass('hidden');
 		$("[id=logout]").removeClass('hidden');
-		$("[id=shopbadge]").html(3);
 		getname(function onComplete(name) {
 			$("[id=name]").html(name);
 		});
 	}
+	getshopcartcount(function onComplete(count) {
+		if(count > 0)
+			$("[id=shopbadge]").html(count);
+		else
+			$("[id=shopbadge]").html('');
+	});
   });
   function logout() {
 	var url = "http://www.meigic.tw/oase/logout.php";
@@ -104,8 +108,17 @@
 		var info = data.split(":");
 			if(info[0] == "success")
 				onCompleteEvent(info[1]);
-			else
-				alert(data);
+	});
+  }
+  function getshopcartcount(onCompleteEvent) {
+	var url = "http://www.meigic.tw/oase/shopcart.php?type=get_temp_order_count";
+	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+		url += "&sessionid=" + $.cookie('PHPSESSID');
+	$.get( url, function(data) {
+		var info = data.split(":");
+			if(info[0] == "success") {
+				onCompleteEvent(info[1]);
+			}
 	});
   }
 </script>

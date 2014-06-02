@@ -599,6 +599,8 @@
                 .find('> thead > tr:last-child > th')
                 .each(function () {
                     var data = ft.columns[$(this).index()], selector = '', first = true;
+					if(typeof data == 'undefined')
+						return;
                     $.each(data.matches, function (m, match) {
                         if (!first) {
                             selector += ', ';

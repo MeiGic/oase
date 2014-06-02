@@ -18,57 +18,64 @@
 		<div class="col-lg-4 col-md-4">
 			<h1 id="productname"></h1>
 			<br>
-			<form role="form">
-				<div class="btn-group-vertical" data-toggle="buttons">
+			<form id="productdetailform" role="form">
+				<div class="btn-group-vertical" data-toggle="buttons" id="size">
 				  <label class="btn btn-success active">
-					<input type="radio" name="size" id="large"> 大杯
+					<input type="radio" name="size" id="large" value="L"> 大杯
 				  </label>
 				  <label class="btn btn-success">
-					<input type="radio" name="size" id="medium"> 中杯
+					<input type="radio" name="size" id="medium" value="M"> 中杯
 				  </label>
 				  <label class="btn btn-success">
-					<input type="radio" name="size" id="small"> 小杯
+					<input type="radio" name="size" id="small" value="S"> 小杯
 				  </label>
 				</div>
-				<div class="btn-group-vertical" data-toggle="buttons">
+				<div class="btn-group-vertical" data-toggle="buttons" id="sweet">
 				  <label class="btn btn-warning active">
-					<input type="radio" name="sweet" id="full"> 全糖
+					<input type="radio" name="sweet" id="full" value="5"> 全糖
 				  </label>
 				  <label class="btn btn-warning">
-					<input type="radio" name="sweet" id="less"> 少糖
+					<input type="radio" name="sweet" id="less" value="4"> 少糖
 				  </label>
 				  <label class="btn btn-warning">
-					<input type="radio" name="sweet" id="half"> 半糖
+					<input type="radio" name="sweet" id="half" value="3"> 半糖
 				  </label>
 				  <label class="btn btn-warning">
-					<input type="radio" name="sweet" id="few"> 微糖
+					<input type="radio" name="sweet" id="few" value="2"> 微糖
 				  </label>
 				  <label class="btn btn-warning">
-					<input type="radio" name="sweet" id="none"> 無糖
+					<input type="radio" name="sweet" id="none" value="1"> 無糖
 				  </label>
 				</div>
-				<div class="btn-group-vertical" data-toggle="buttons">
+				<div class="btn-group-vertical" data-toggle="buttons" id="temp">
 				  <label class="btn btn-primary active">
-					<input type="radio" name="temp" id="full" class="active"> 全冰
+					<input type="radio" name="temp" id="full" value="5"> 全冰
 				  </label>
 				  <label class="btn btn-primary">
-					<input type="radio" name="temp" id="less"> 少冰
+					<input type="radio" name="temp" id="less" value="4"> 少冰
 				  </label>
 				  <label class="btn btn-primary">
-					<input type="radio" name="temp" id="half"> 半冰
+					<input type="radio" name="temp" id="half" value="3"> 半冰
 				  </label>
 				  <label class="btn btn-primary">
-					<input type="radio" name="temp" id="few"> 微冰
+					<input type="radio" name="temp" id="few" value="2"> 微冰
 				  </label>
 				  <label class="btn btn-primary">
-					<input type="radio" name="temp" id="none"> 去冰
+					<input type="radio" name="temp" id="none" value="1"> 去冰
 				  </label>
 				</div>
 				<br>
+				<br>
+				<div id="specialorder" class="form-control" placeholder="選擇加料">
+				</div>
 				<br>
 				<input type="text" id="count" class="form-control" />
 				<h2 id="productprice" class="text-danger"></h2>
-				<button type="button" class="btn btn-lg btn-danger"><i class="fa fa-thumbs-o-up"></i> 放入購物</button>
+				<div id="msg" class="row">
+					<h2 id="fail" class="text-danger"></h2>
+					<h2 id="success" class="text-success"></h2>
+				</div>
+				<button type="submit" class="btn btn-lg btn-danger"><i class="fa fa-thumbs-o-up"></i> 放入購物</button>
 			</form>
 		</div>
 	</div>
@@ -201,16 +208,23 @@ function showdetail() {
 	$( '#list' ).hide( "blind", { direction: "left" }, "fast");
 	$( '#detail' ).removeClass('hidden');
 	$( '#detail' ).show( "blind", { direction: "left" }, "fast");
+	$( "#msg" ).hide();
 }
+var totalprice;
 function loadproductdetail(pid) {
 	$( "#detail #productimg" ).hide();
 	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist", id: pid}, function(data) {
-		//alert(data.result[0].p_name);
+		totalprice = +(data.result[0].price);
 		$( "#detail #productname" ).html(data.result[0].p_name);
 		$( "#detail #productimg" ).attr("src", data.result[0].pic_path);
-		$( "#detail #productprice" ).html("NTD$ " + data.result[0].price);
+		//$( "#detail #productprice" ).html("NTD$ " + totalprice);
+		updatetotalprice();
 		$( "#detail #productimg" ).fadeIn();
 	});
+}
+function updatetotalprice() {
+	var sum = totalprice * +($("#count").val());
+	$( "#detail #productprice" ).html("NTD$ " + sum);
 }
 $(function () {
 	$('body').css('overflow-x','hidden');
@@ -219,5 +233,84 @@ $(function () {
 		maximum: 99,
 		step: 1
 	});
+	$('#count').on("valueChanged", function (e) {
+		updatetotalprice();
+	});
+	var specialorderlist = [];
+	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"specialorderlist"}, function(data) {
+		$.each(data.result, function(key, val) {
+			specialorderlist.push({
+				id: val.so_id,
+				text: val.so_name + " $" + val.price
+			});
+		});
+		$("#specialorder").select2({
+			multiple: true,
+			data: specialorderlist
+		});
+		$("#specialorder").on("change", function(e) {
+			if(typeof totalprice != 'undefined' && typeof specialorderlist != 'undefined') {
+				if(typeof e.added != 'undefined')
+					totalprice += +(data.result[e.added.id - 1].price);
+				if(typeof e.removed != 'undefined')
+					totalprice -= +(data.result[e.removed.id - 1].price);;
+			}
+			updatetotalprice();
+		});
+	});
 });
+function getbtngroupvalue(id) {
+	return $("#" + id).find("label.active").children("input").val();
+}
+// Attach a submit handler to the form
+$( "#productdetailform" ).submit(function( event ) {
+
+	// Stop form from submitting normally
+	event.preventDefault();
+	
+	var p_id = currentpara[1];
+	var so_id = $("#specialorder").val();
+	var size = getbtngroupvalue("size");
+	var sweet = getbtngroupvalue("sweet");
+	var temp = getbtngroupvalue("temp");
+	var count = $('#count').val();
+	
+	var params = {
+				sessionid:$.cookie('PHPSESSID'),
+				type:"add_temp_order",
+				p_id:p_id,
+				so_id:so_id,
+				size:size,
+				temp:temp,
+				sweet:sweet,
+				count:count
+				};
+	
+	// Send the data using post
+	var posting = $.post( "http://www.meigic.tw/oase/shopcart.php", params );
+	posting.done(function( data ) {
+		$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
+			$( "#fail" ).html('');
+			$( "#success" ).html('');
+			
+			var info = data.split(":");
+			if(info[0] == "failed") {
+				if(info[1] == "incorrect_request")
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 輸入錯誤');
+				else
+					$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 未知錯誤');
+			} else {
+				$( "#success" ).html('<i class="fa fa-check-circle"></i> 成功');
+			}
+			
+			$( "#msg" ).show( "blind", { direction: "down" }, "fast", function() {
+				if(info[0] == "success") {
+					$.cookie('PHPSESSID', info[1], { path: '/' });
+					ajaxload("#header", "ajax/header.html");
+				}
+			});
+		});
+	});
+});
+$( "#msg" ).hide();
 </script>

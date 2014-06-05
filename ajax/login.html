@@ -18,7 +18,7 @@
 						<label class="remember_me-label" for="remember_me"> 記住我</label>
 					</div>
 					<div class="col-xs-6 col-sm-6 col-lg-6">
-						<a href="" tabindex="4">忘記密碼？</a>
+						<a href="" tabindex="4" data-toggle="modal" data-target="#forgotpassword">忘記密碼？</a>
 					</div>
 				</div>
 				<div id="msg" class="row">
@@ -37,6 +37,26 @@
 			</fieldset>
 		</form>
 	</div>
+</div>
+<div class="modal fade" id="forgotpassword" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title custom_align" id="Heading">忘記密碼</h4>
+			</div>
+			<div class="modal-body">
+				<h4><i class="fa fa-info-circle"></i> 請輸入您的帳號</h4>
+				<input type="text" class="form-control" placeholder="您的帳號即電子郵件地址"></input>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="confirm" class="btn btn-success" data-dismiss="modal">確定</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	<!-- /.modal-content --> 
+	</div>
+<!-- /.modal-dialog --> 
 </div>
 <script>
 // Attach a submit handler to the form
@@ -76,6 +96,7 @@ $( "#loginform" ).submit(function( event ) {
 					$.cookie('PHPSESSID', info[1], { path: '/' });
 					ajaxload("#header", "ajax/header.html");
 					window.location.replace("#productlist");
+					//window.location.reload();
 				}
 			});
 		});

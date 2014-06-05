@@ -58,7 +58,8 @@
 			<div class="panel-footer text-right">
 				<span class="label label-primary">總計：<span id="count">0</span>杯</span>
 				<span class="label label-danger">小計：NTD$<span id="sum">0</span></span>
-				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#order">結帳 <i class="fa fa-chevron-circle-right"></i></button>
+				<a type="button" id="loginfirst" class="btn btn-success" href="#login">結帳請先登入 <i class="fa fa-chevron-circle-right"></i></a>
+				<button type="button" id="checkoutnow" class="btn btn-success" data-toggle="modal" data-target="#order">結帳 <i class="fa fa-chevron-circle-right"></i></button>
 			</div>
 		</div>
 	</div>
@@ -127,8 +128,8 @@
 				<h4 class="modal-title custom_align" id="Heading">取消訂單</h4>
 			</div>
 			<div class="modal-body">
-				<div><i class="fa fa-exclamation-circle"></i> 你確定要取消此筆訂單嗎？</div>
-				<h4 id="deleterowdetail"></h4>
+				<h4><i class="fa fa-exclamation-circle"></i> 你確定要取消此筆訂單嗎？</h4>
+				<div id="deleterowdetail"></div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" id="confirmrowdelete" class="btn btn-danger" data-dismiss="modal">確定</button>
@@ -148,7 +149,33 @@
 				<h4 class="modal-title custom_align" id="Heading">結帳</h4>
 			</div>
 			<div class="modal-body">
-				<div><i class="fa fa-info-circle"></i> 請填寫以下資訊完成結帳</div>
+				<h4><i class="fa fa-info-circle"></i> 請填寫以下資訊完成結帳</h4>
+				<h4>您的電話：<h4>
+				<div class="btn-group-vertical" data-toggle="buttons" id="phone">
+				  <label class="btn btn-primary active">
+					<input type="radio" name="phone"> 來自帳號資訊： <strong>0911-111-123</strong>
+				  </label>
+				  <label class="btn btn-primary">
+					<input type="radio" name="phone"> 手動填寫： <input type="text" class="form-control" placeholder="您的電話">
+				  </label>
+				</div>
+				<h4>寄送地址：<h4>
+				<div class="btn-group-vertical" data-toggle="buttons" id="address">
+				  <label class="btn btn-warning active">
+					<input type="radio" name="address"> 來自帳號資訊： <strong>台北市忠孝東路三段1號4樓</strong>
+				  </label>
+				  <label class="btn btn-warning">
+						<input type="radio" name="address"> 店鋪取貨： 
+						<div class="form-group">
+							<select type="text" id="storedropdown" class="form-control select2" data-placeholder="請選擇" placeholder="請選擇" tabindex="3">
+								<option></option>
+							</select>
+						</div>
+				  </label>
+				  <label class="btn btn-warning">
+						<input type="radio" name="address"> 手動填寫： <input type="text" class="form-control" placeholder="您的地址">
+				  </label>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" id="confirmorder" class="btn btn-success" data-dismiss="modal">完成！</button>
@@ -161,6 +188,23 @@
 </div>
 
 <script>
+$.get( "http://www.meigic.tw/oase/check.php", {sessionid:$.cookie('PHPSESSID'), type:"isloggedin"}, function(data) {
+	$("#loginfirst").hide();
+	$("#checkoutnow").hide();
+	if(data == 0) {
+		$("#loginfirst").show();
+	} else {
+		$("#checkoutnow").show();
+	}
+});
+$.getJSON("http://www.meigic.tw/oase/go.php", {type:"storelist"}, function(data) {
+	$.each(data.result, function(key, val) {
+		$("#storedropdown").append($("<option></option>").attr("value", val.u_id).text(val.u_name));
+	});
+	$("#storedropdown").select2({
+		minimumResultsForSearch: -1,
+	});
+});
 $('[rel="tooltip"]').tooltip();
 $("#ordertable").footable();
 $("#recordtable").footable();
@@ -181,7 +225,7 @@ $('table').footable().on('click', '.row-delete', function(e) {
 	var deletedetail = "";
 	$(row).children('td').each(function(i) {
 		if(i < 6) {
-			deletedetail += $(thead).children("th").eq(i).html() + ": ";
+			deletedetail += "<strong>" + $(thead).children("th").eq(i).html() + ": </strong>";
 			deletedetail += $(this).text() + "<br>";
 		}
 	});

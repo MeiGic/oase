@@ -64,7 +64,7 @@ $( "#loginform" ).submit(function( event ) {
 	// Stop form from submitting normally
 	event.preventDefault();
 	
-	var url = "http://www.meigic.tw/oase/login.php";
+	var url = "http://www.meigic.tw/oaseadmin/oaseadmin/loginapi/";
 	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 		url += "?sessionid=" + $.cookie('PHPSESSID');
 	

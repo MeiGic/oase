@@ -105,7 +105,7 @@ $( "#registerform" ).submit(function( event ) {
 	//console.log(params);
 	
 	// Send the data using post
-	var posting = $.post( "http://www.meigic.tw/oase/register.php", params );
+	var posting = $.post( "http://www.meigic.tw/oaseadmin/oaseadmin/registerapi/", params );
 	posting.done(function( data ) {
 		$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
 			$( "#fail" ).html('');

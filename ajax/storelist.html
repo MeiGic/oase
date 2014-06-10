@@ -13,16 +13,16 @@
 <script>
 	$( document ).ready(function() {
 		var storelist = [];
-		$.getJSON("http://www.meigic.tw/oase/go.php", {type:"storelist"}, function(data) {
+		$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/storelistapi/", {type:"storelist"}, function(data) {
 			$.each(data.result, function(key, val) {
 				storelist.push({
 					lat: val.latitude,
 					lon: val.longitude,
-					title: val.u_name + val.type,
+					title: val.name + val.type,
 					zoom: 15,
 					html: [
-						'<h5>' + val.u_name + val.type + '</h5>',
-						'<p>' + val.u_address + '</p>'
+						'<h5>' + val.name + val.type + '</h5>',
+						'<p>' + val.address + '</p>'
 					].join('')
 				})
 			});

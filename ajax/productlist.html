@@ -83,9 +83,9 @@
 <script type="text/x-handlebars-template" id="waterfall-tpl">
 {{#result}}
 	<div class="item" style="width:222px;">
-		<a style="display:block" href="#productlist&{{p_id}}" onclick="loadproductdetail({{p_id}})"></a>
-		<img style="width:192px;" alt="{{p_name}}" src="{{pic_path}}" />
-		<h5 class="text-center productname" style="width:192px;">{{p_name}}</h5>
+		<a style="display:block" href="#productlist&{{id}}" onclick="loadproductdetail({{id}})"></a>
+		<img style="width:192px;" alt="{{name}}" src="http://www.meigic.tw/oaseadmin/upload/product/{{id}}.jpg" />
+		<h5 class="text-center productname" style="width:192px;">{{name}}</h5>
 	</div>
 {{/result}}
 </script>
@@ -112,7 +112,7 @@ $('#container').waterfall({
 	maxPage: 1,
 	isFadeIn: true,
 	path: function( page ) {
-        return 'http://www.meigic.tw/oase/go.php';
+        return 'http://www.meigic.tw/oaseadmin/oaseadmin/productlistapi/';
     },
 	params: {
 		'type': 'productlist'
@@ -215,9 +215,9 @@ var sizeprice = [];
 var otherprice = 0;
 function loadproductdetail(pid) {
 	$( "#detail #productimg" ).hide();
-	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist", id: pid}, function(data) {
-		$( "#detail #productname" ).html(data.result[0].p_name);
-		$( "#detail #productimg" ).attr("src", data.result[0].pic_path);
+	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/productlistapi/", {type:"productlist", id: pid}, function(data) {
+		$( "#detail #productname" ).html(data.result[0].name);
+		$( "#detail #productimg" ).attr("src", "http://www.meigic.tw/oaseadmin/upload/product/" + data.result[0].id + ".jpg");
 		sizeprice = {L:data.result[0].price_L, M:data.result[0].price_M, S:data.result[0].price_S};
 		//console.log(singleprice);
 		updatetotalprice();
@@ -242,7 +242,7 @@ $(function () {
 		updatetotalprice();
 	});
 	var specialorderlist = [];
-	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"specialorderlist"}, function(data) {
+	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/specialorderlistapi/", {type:"specialorderlist"}, function(data) {
 		$.each(data.result, function(key, val) {
 			specialorderlist.push({
 				id: val.so_id,
@@ -296,7 +296,7 @@ $( "#productdetailform" ).submit(function( event ) {
 				};
 	
 	// Send the data using post
-	var posting = $.post( "http://www.meigic.tw/oase/shopcart.php", params );
+	var posting = $.post( "http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/", params );
 	posting.done(function( data ) {
 		$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
 			$( "#fail" ).html('');

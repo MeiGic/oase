@@ -69,7 +69,7 @@
   $(function(){
 	$('[rel="tooltip"]').tooltip();
   });
-  var url = "http://www.meigic.tw/oase/check.php?type=isloggedin";
+  var url = "http://www.meigic.tw/oaseadmin/oaseadmin/checkapi/?type=isloggedin";
   if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 	url += "&sessionid=" + $.cookie('PHPSESSID');
   $.get( url, function(data) {
@@ -92,7 +92,7 @@
 	});
   });
   function logout() {
-	var url = "http://www.meigic.tw/oase/logout.php";
+	var url = "http://www.meigic.tw/oaseadmin/oaseadmin/logoutapi/";
 	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 		url += "?sessionid=" + $.cookie('PHPSESSID');
 	$.get( url, function(data) {
@@ -104,7 +104,7 @@
 	});
   }
   function getname(onCompleteEvent) {
-	var url = "http://www.meigic.tw/oase/get.php?type=name";
+	var url = "http://www.meigic.tw/oaseadmin/oaseadmin/getapi/?type=name";
 	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 		url += "&sessionid=" + $.cookie('PHPSESSID');
 	$.get( url, function(data) {
@@ -114,7 +114,7 @@
 	});
   }
   function getshopcartcount(onCompleteEvent) {
-	var url = "http://www.meigic.tw/oase/shopcart.php?type=get_temp_order_count";
+	var url = "http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/?type=get_temp_order_count";
 	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 		url += "&sessionid=" + $.cookie('PHPSESSID');
 	$.get( url, function(data) {

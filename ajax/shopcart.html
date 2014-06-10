@@ -200,7 +200,7 @@
 </div>
 
 <script>
-$.get( "http://www.meigic.tw/oase/check.php", {sessionid:$.cookie('PHPSESSID'), type:"isloggedin"}, function(data) {
+$.get( "http://www.meigic.tw/oaseadmin/oaseadmin/checkapi/", {sessionid:$.cookie('PHPSESSID'), type:"isloggedin"}, function(data) {
 	$("#loginfirst").hide();
 	$("#checkoutnow").hide();
 	if(data == 0) {
@@ -209,7 +209,7 @@ $.get( "http://www.meigic.tw/oase/check.php", {sessionid:$.cookie('PHPSESSID'), 
 		$("#checkoutnow").show();
 	}
 });
-$.getJSON("http://www.meigic.tw/oase/go.php", {type:"storelist"}, function(data) {
+$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/storelistapi/", {type:"storelist"}, function(data) {
 	$.each(data.result, function(key, val) {
 		$("#storedropdown").append($("<option></option>").attr("value", val.u_id).text(val.u_name + val.type));
 	});
@@ -217,7 +217,7 @@ $.getJSON("http://www.meigic.tw/oase/go.php", {type:"storelist"}, function(data)
 		//minimumResultsForSearch: -1,
 	});
 });
-var url = "http://www.meigic.tw/oase/get.php?type=phone";
+var url = "http://www.meigic.tw/oaseadmin/oaseadmin/getapi/?type=phone";
 if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 	url += "&sessionid=" + $.cookie('PHPSESSID');
 $.get( url, function(data) {
@@ -228,7 +228,7 @@ $.get( url, function(data) {
 			else
 				$("#mem_phone_account").remove();
 });
-var url = "http://www.meigic.tw/oase/get.php?type=address";
+var url = "http://www.meigic.tw/oaseadmin/oaseadmin/getapi/?type=address";
 if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 	url += "&sessionid=" + $.cookie('PHPSESSID');
 $.get( url, function(data) {
@@ -324,20 +324,20 @@ function updateOrderInfo() {
 getspecialorderlist();
 var specialorderlist = [];
 function getspecialorderlist() {
-	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"specialorderlist"}, function(data) {
+	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/specialorderlistapi/", {type:"specialorderlist"}, function(data) {
 		specialorderlist = data.result;
 		getproductlist();
 	});
 }
 var productlist = [];
 function getproductlist() {
-	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist"}, function(data) {
+	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/productlistapi/", {type:"productlist"}, function(data) {
 		productlist = data.result;
 		getorderlist();
 	});
 }
 function getorderlist() {
-	$.getJSON("http://www.meigic.tw/oase/shopcart.php", {sessionid:$.cookie('PHPSESSID'), type:"get_temp_order"}, function(data) {
+	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/", {sessionid:$.cookie('PHPSESSID'), type:"get_temp_order"}, function(data) {
 		//get the footable object
 		var footable = $('#ordertable').data('footable');
 		var orderdata = data;

@@ -227,7 +227,7 @@ function loadproductdetail(pid) {
 function updatetotalprice() {
 	var size = getbtngroupvalue("size");
 	totalprice = +(sizeprice[size]) + +(otherprice);
-	console.log(totalprice);
+	//console.log(totalprice);
 	var sum = totalprice * +($("#count").val());
 	$( "#detail #productprice" ).html("NTD$ " + sum);
 }
@@ -245,8 +245,8 @@ $(function () {
 	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/specialorderlistapi/", {type:"specialorderlist"}, function(data) {
 		$.each(data.result, function(key, val) {
 			specialorderlist.push({
-				id: val.so_id,
-				text: val.so_name + " $" + val.price
+				id: val.id,
+				text: val.name + " $" + val.price
 			});
 		});
 		$("#specialorder").select2({

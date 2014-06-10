@@ -211,7 +211,7 @@ $.get( "http://www.meigic.tw/oaseadmin/oaseadmin/checkapi/", {sessionid:$.cookie
 });
 $.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/storelistapi/", {type:"storelist"}, function(data) {
 	$.each(data.result, function(key, val) {
-		$("#storedropdown").append($("<option></option>").attr("value", val.u_id).text(val.u_name + val.type));
+		$("#storedropdown").append($("<option></option>").attr("value", val.id).text(val.name + val.type));
 	});
 	$("#storedropdown").select2({
 		//minimumResultsForSearch: -1,
@@ -326,6 +326,7 @@ var specialorderlist = [];
 function getspecialorderlist() {
 	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/specialorderlistapi/", {type:"specialorderlist"}, function(data) {
 		specialorderlist = data.result;
+		//console.log(data);
 		getproductlist();
 	});
 }
@@ -333,6 +334,7 @@ var productlist = [];
 function getproductlist() {
 	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/productlistapi/", {type:"productlist"}, function(data) {
 		productlist = data.result;
+		//console.log(data);
 		getorderlist();
 	});
 }
@@ -341,17 +343,18 @@ function getorderlist() {
 		//get the footable object
 		var footable = $('#ordertable').data('footable');
 		var orderdata = data;
+		//console.log(data);
 		if(orderdata.length > 0 && productlist.length > 0 && specialorderlist.length > 0) {
 			$.each(orderdata, function(key, val) {
 				var matchproduct;
 				for(var i = 0; i < productlist.length; i++) {
-					if(productlist[i].p_id == val.p_id) {
+					if(productlist[i].id == val.p_id) {
 						matchproduct = productlist[i];
 						break;
 					}
 				}
 				if(typeof matchproduct != 'undefined') {
-					var productname = matchproduct.p_name;
+					var productname = matchproduct.name;
 					//var productprice = +(matchproduct.price);
 					var sizeprice = {L:matchproduct.price_L, M:matchproduct.price_M, S:matchproduct.price_S};
 					var size = val.size;
@@ -364,9 +367,9 @@ function getorderlist() {
 					var specialorderprice = 0;
 					$.each(specialorderarray, function(index, so_id) {
 						for(var i = 0; i < specialorderlist.length; i++) {
-							if(specialorderlist[i].so_id == so_id) {
+							if(specialorderlist[i].id == so_id) {
 								matchspecialorderlist.push(specialorderlist[i]);
-								specialorderstring.push(specialorderlist[i].so_name);
+								specialorderstring.push(specialorderlist[i].name);
 								specialorderprice += +(specialorderlist[i].price);
 								break;
 							}

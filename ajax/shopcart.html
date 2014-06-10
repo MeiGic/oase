@@ -77,10 +77,22 @@
 					<th data-hide="phone">加料</th>
 					<th>數量</th>
 					<th>價格</th>
+					<th data-hide="phone, tablet">QRCode</th>
 					<th></th>
 				</thead>
 				<tbody>
-		
+				
+				<td>珍珠奶茶</td>
+				<td>大杯</td>
+				<td>半糖</td>
+				<td>少冰</td>
+				<td>粉條</td>
+				<td>1</td>
+				<td>$40</td>
+				<td><img id="QRTest" class="img-rounded"></img></td>
+				<td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td>
+				</tr>
+				
 				<!-- <tr>
 				<td>珍珠奶茶</td>
 				<td>大杯</td>
@@ -152,8 +164,8 @@
 				<h4><i class="fa fa-info-circle"></i> 請填寫以下資訊完成結帳</h4>
 				<h4>您的電話：<h4>
 				<div class="btn-group-vertical" data-toggle="buttons" id="phone">
-				  <label class="btn btn-primary active">
-					<input type="radio" name="phone"> 來自帳號資訊： <strong>0911-111-123</strong>
+				  <label class="btn btn-primary active" id="mem_phone_account">
+					<input type="radio" name="phone"> 來自帳號資訊： <strong id="mem_phone"></strong>
 				  </label>
 				  <label class="btn btn-primary">
 					<input type="radio" name="phone"> 手動填寫： <input type="text" class="form-control" placeholder="您的電話">
@@ -161,8 +173,8 @@
 				</div>
 				<h4>寄送地址：<h4>
 				<div class="btn-group-vertical" data-toggle="buttons" id="address">
-				  <label class="btn btn-warning active">
-					<input type="radio" name="address"> 來自帳號資訊： <strong>台北市忠孝東路三段1號4樓</strong>
+				  <label class="btn btn-warning active" id="mem_address_account">
+					<input type="radio" name="address"> 來自帳號資訊： <strong id="mem_address"></strong>
 				  </label>
 				  <label class="btn btn-warning">
 						<input type="radio" name="address"> 店鋪取貨： 
@@ -199,11 +211,33 @@ $.get( "http://www.meigic.tw/oase/check.php", {sessionid:$.cookie('PHPSESSID'), 
 });
 $.getJSON("http://www.meigic.tw/oase/go.php", {type:"storelist"}, function(data) {
 	$.each(data.result, function(key, val) {
-		$("#storedropdown").append($("<option></option>").attr("value", val.u_id).text(val.u_name));
+		$("#storedropdown").append($("<option></option>").attr("value", val.u_id).text(val.u_name + val.type));
 	});
 	$("#storedropdown").select2({
-		minimumResultsForSearch: -1,
+		//minimumResultsForSearch: -1,
 	});
+});
+var url = "http://www.meigic.tw/oase/get.php?type=phone";
+if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+	url += "&sessionid=" + $.cookie('PHPSESSID');
+$.get( url, function(data) {
+	var info = data.split(":");
+		if(info[0] == "success")
+			if(info[1])
+				$("#mem_phone").html(info[1]);
+			else
+				$("#mem_phone_account").remove();
+});
+var url = "http://www.meigic.tw/oase/get.php?type=address";
+if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+	url += "&sessionid=" + $.cookie('PHPSESSID');
+$.get( url, function(data) {
+	var info = data.split(":");
+		if(info[0] == "success")
+			if(info[1])
+				$("#mem_address").html(info[1]);
+			else
+				$("#mem_address_account").remove();
 });
 $('[rel="tooltip"]').tooltip();
 $("#ordertable").footable();
@@ -360,4 +394,13 @@ function getorderlist() {
 		});
 	});
 }
+function QRCode(content, width, height){
+	// 預設寬高為 120x120
+	width = !!width ? width : 120;
+	height = !!height ? height : 120;
+	// 編碼
+	content = encodeURIComponent(content);
+	return 'http://chart.apis.google.com/chart?cht=qr&chl=' + content + '&chs=' + width + 'x' + height;
+}
+$("#QRTest").attr("src", QRCode("$2a$12$/MeiGicOase/1QOGY4Vr6uWzTgYIJai.x14kgjlw0yxHz5Wcq4IDu", 90, 90));
 </script>

@@ -210,19 +210,24 @@ function showdetail() {
 	$( '#detail' ).show( "blind", { direction: "left" }, "fast");
 	$( "#msg" ).hide();
 }
-var totalprice;
+var totalprice = 0;
+var sizeprice = [];
+var otherprice = 0;
 function loadproductdetail(pid) {
 	$( "#detail #productimg" ).hide();
 	$.getJSON("http://www.meigic.tw/oase/go.php", {type:"productlist", id: pid}, function(data) {
-		totalprice = +(data.result[0].price);
 		$( "#detail #productname" ).html(data.result[0].p_name);
 		$( "#detail #productimg" ).attr("src", data.result[0].pic_path);
-		//$( "#detail #productprice" ).html("NTD$ " + totalprice);
+		sizeprice = {L:data.result[0].price_L, M:data.result[0].price_M, S:data.result[0].price_S};
+		//console.log(singleprice);
 		updatetotalprice();
 		$( "#detail #productimg" ).fadeIn();
 	});
 }
 function updatetotalprice() {
+	var size = getbtngroupvalue("size");
+	totalprice = +(sizeprice[size]) + +(otherprice);
+	console.log(totalprice);
 	var sum = totalprice * +($("#count").val());
 	$( "#detail #productprice" ).html("NTD$ " + sum);
 }
@@ -249,11 +254,11 @@ $(function () {
 			data: specialorderlist
 		});
 		$("#specialorder").on("change", function(e) {
-			if(typeof totalprice != 'undefined' && typeof specialorderlist != 'undefined') {
+			if(typeof otherprice != 'undefined' && typeof specialorderlist != 'undefined') {
 				if(typeof e.added != 'undefined')
-					totalprice += +(data.result[e.added.id - 1].price);
+					otherprice += +(data.result[e.added.id - 1].price);
 				if(typeof e.removed != 'undefined')
-					totalprice -= +(data.result[e.removed.id - 1].price);;
+					otherprice -= +(data.result[e.removed.id - 1].price);;
 			}
 			updatetotalprice();
 		});
@@ -262,6 +267,10 @@ $(function () {
 function getbtngroupvalue(id) {
 	return $("#" + id).find("label.active").children("input").val();
 }
+$('#size label').click(function() {
+    $('#size label').addClass('active').not(this).removeClass('active');
+	updatetotalprice();
+});
 // Attach a submit handler to the form
 $( "#productdetailform" ).submit(function( event ) {
 

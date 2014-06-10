@@ -3,10 +3,10 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3 text-center">
 		<form role="form" id="registerform" action="/">
-			<h2>請註冊 <small>免費</small></h2>
+			<h2>請註冊 <small class="text-primary">免費</small></h2>
 			<hr class="colorgraph">
 			<div class="form-group">
-				<input type="text" name="name" id="name" class="form-control input-lg" placeholder="您的姓名" tabindex="1" required></input>
+				<input type="text" name="name" id="name" class="form-control input-lg" placeholder="您的姓名*" tabindex="1" required></input>
 			</div>
 			<div class="row">
 				<div class="col-xs-12 col-sm-6 col-md-6">
@@ -25,34 +25,50 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<input type="tel" name="phone" id="phone" class="form-control input-lg" placeholder="您的電話" tabindex="4"></input>
-			</div>
-			<div class="form-group">
-				<input type="text" name="address" id="address" class="form-control input-lg" placeholder="您的地址" tabindex="5"></input>
-			</div>
-			<div class="form-group">
-				<input type="email" name="email" id="email" class="form-control input-lg" placeholder="電子郵件即為帳號" tabindex="6" required></input>
-			</div>
 			<div class="row">
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-						<input type="password" name="password" id="password" class="form-control input-lg" placeholder="密碼" tabindex="7" required></input>
+						<input type="tel" name="phone" id="phone" class="form-control input-lg" placeholder="您的電話" tabindex="4"></input>
 					</div>
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="確認密碼" tabindex="8" required></input>
+						<div class="btn-group" data-toggle="buttons" id="gender">
+						  <label class="btn btn-lg btn-primary" tabindex="5">
+							<input type="radio" name="gender" id="male" value="M"> 男性
+						  </label>
+						  <label class="btn btn-lg btn-danger" tabindex="6">
+							<input type="radio" name="gender" id="female" value="F"> 女性
+						  </label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<input type="text" name="address" id="address" class="form-control input-lg" placeholder="您的地址" tabindex="7"></input>
+			</div>
+			<div class="form-group">
+				<input type="email" name="email" id="email" class="form-control input-lg" placeholder="電子郵件即為帳號*" tabindex="8" required></input>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+						<input type="password" name="password" id="password" class="form-control input-lg" placeholder="密碼*" tabindex="9" required></input>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="確認密碼*" tabindex="10" required></input>
 					</div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<div class="col-xs-12 col-sm-6 col-lg-6">
-					<input type="checkbox" name="t_and_c" id="t_and_c" tabindex="9" required></input>
+					<input type="checkbox" name="t_and_c" id="t_and_c" tabindex="11" required></input>
 					<label class="t_and_c-label" for="t_and_c"> 我同意</label>
 				</div>
 				<div class="col-xs-12 col-sm-6 col-lg-6">
-					按下<strong class="label label-primary">註冊</strong>代表您同意<a href="#" data-toggle="modal" data-target="#t_and_c_m" tabindex="10">服務條款</a>。
+					<strong>按下<strong class="label label-primary">註冊</strong>代表您同意<a href="#" data-toggle="modal" data-target="#t_and_c_m" tabindex="12">服務條款</a>。</strong>
 				</div>
 			</div>
 			<div id="msg" class="row">
@@ -61,8 +77,8 @@
 			</div>
 			<hr class="colorgraph">
 			<div class="row">
-				<div class="col-xs-6 col-md-6"><input type="submit" value="註冊" class="btn btn-primary btn-block btn-lg" tabindex="11"></div>
-				<div class="col-xs-6 col-md-6"><a href="#login" class="btn btn-success btn-block btn-lg" tabindex="12">登入</a></div>
+				<div class="col-xs-6 col-md-6"><input type="submit" value="註冊" class="btn btn-primary btn-block btn-lg" tabindex="13"></div>
+				<div class="col-xs-6 col-md-6"><a href="#login" class="btn btn-success btn-block btn-lg" tabindex="14">登入</a></div>
 			</div>
 		</form>
 	</div>
@@ -75,13 +91,21 @@ $('#birthday').datepicker({
 $("#career").select2({
 	minimumResultsForSearch: -1
 });
+function getbtngroupvalue(id) {
+	return $("#" + id).find("label.active").children("input").val();
+}
 // Attach a submit handler to the form
 $( "#registerform" ).submit(function( event ) {
 	// Stop form from submitting normally
 	event.preventDefault();
 	
+	var params = $( "#registerform" ).serializeArray();
+	var gender = getbtngroupvalue("gender");
+	params.push({name:"gender", value:gender});
+	//console.log(params);
+	
 	// Send the data using post
-	var posting = $.post( "http://www.meigic.tw/oase/register.php", $( "#registerform" ).serialize() );
+	var posting = $.post( "http://www.meigic.tw/oase/register.php", params );
 	posting.done(function( data ) {
 		$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
 			$( "#fail" ).html('');

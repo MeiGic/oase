@@ -352,8 +352,10 @@ function getorderlist() {
 				}
 				if(typeof matchproduct != 'undefined') {
 					var productname = matchproduct.p_name;
-					var productprice = +(matchproduct.price);
+					//var productprice = +(matchproduct.price);
+					var sizeprice = {L:matchproduct.price_L, M:matchproduct.price_M, S:matchproduct.price_S};
 					var size = val.size;
+					var productprice = +(sizeprice[size]);
 					var sweet = +(val.sweet);
 					var temp = +(val.temp);
 					var specialorderarray = val.so_id.split(',');

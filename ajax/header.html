@@ -97,9 +97,10 @@
 		url += "?sessionid=" + $.cookie('PHPSESSID');
 	$.get( url, function(data) {
 		$.removeCookie('PHPSESSID', { path: '/' });
-		ajaxload("#header", "ajax/header.html");
 		if(currentpara[0] == 'shopcart')
-			ajaxload("#context", "ajax/shopcart.html");
+			location.reload();
+		else
+			ajaxload("#header", "ajax/header.html");
 	});
   }
   function getname(onCompleteEvent) {

@@ -165,19 +165,19 @@
 				<h4>您的電話：<h4>
 				<div class="btn-group-vertical" data-toggle="buttons" id="phone">
 				  <label class="btn btn-primary active" id="mem_phone_account">
-					<input type="radio" name="phone"> 來自帳號資訊： <strong id="mem_phone"></strong>
+					<input type="radio" name="phone" value="account"> 來自帳號資訊： <strong id="mem_phone"></strong>
 				  </label>
 				  <label class="btn btn-primary">
-					<input type="radio" name="phone"> 手動填寫： <input type="text" class="form-control" placeholder="您的電話">
+					<input type="radio" name="phone" value="manual"> 手動填寫： <input type="text" class="form-control" placeholder="您的電話" id="manual_phone">
 				  </label>
 				</div>
 				<h4>寄送地址：<h4>
 				<div class="btn-group-vertical" data-toggle="buttons" id="address">
 				  <label class="btn btn-warning active" id="mem_address_account">
-					<input type="radio" name="address"> 來自帳號資訊： <strong id="mem_address"></strong>
+					<input type="radio" name="address" value="account"> 來自帳號資訊： <strong id="mem_address"></strong>
 				  </label>
 				  <label class="btn btn-warning">
-						<input type="radio" name="address"> 店鋪取貨： 
+						<input type="radio" name="address" value="select"> 店鋪取貨： 
 						<div class="form-group">
 							<select type="text" id="storedropdown" class="form-control select2" data-placeholder="請選擇" placeholder="請選擇" tabindex="3">
 								<option></option>
@@ -185,12 +185,12 @@
 						</div>
 				  </label>
 				  <label class="btn btn-warning">
-						<input type="radio" name="address"> 手動填寫： <input type="text" class="form-control" placeholder="您的地址">
+						<input type="radio" name="address" value="manual"> 手動填寫： <input type="text" class="form-control" placeholder="您的地址" id="manual_address">
 				  </label>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="confirmorder" class="btn btn-success" data-dismiss="modal">完成！</button>
+				<button type="submit" id="confirmorder" class="btn btn-success" data-dismiss="modal">完成！</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
 		</div>
@@ -217,26 +217,30 @@ $.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/storelistapi/", {type:"store
 		//minimumResultsForSearch: -1,
 	});
 });
+var mem_phone;
 var url = "http://www.meigic.tw/oaseadmin/oaseadmin/getapi/?type=phone";
 if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 	url += "&sessionid=" + $.cookie('PHPSESSID');
 $.get( url, function(data) {
 	var info = data.split(":");
 		if(info[0] == "success")
-			if(info[1])
+			if(info[1]) {
+				mem_phone = info[1];
 				$("#mem_phone").html(info[1]);
-			else
+			} else
 				$("#mem_phone_account").remove();
 });
+var mem_address;
 var url = "http://www.meigic.tw/oaseadmin/oaseadmin/getapi/?type=address";
 if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
 	url += "&sessionid=" + $.cookie('PHPSESSID');
 $.get( url, function(data) {
 	var info = data.split(":");
 		if(info[0] == "success")
-			if(info[1])
+			if(info[1]) {
+				mem_address = info[1];
 				$("#mem_address").html(info[1]);
-			else
+			} else
 				$("#mem_address_account").remove();
 });
 $('[rel="tooltip"]').tooltip();
@@ -321,6 +325,9 @@ function updateOrderInfo() {
 	$("#count").html(count);
 	$("#sum").html(sum);
 }
+function getbtngroupvalue(id) {
+	return $("#" + id).find("label.active").children("input").val();
+}
 getspecialorderlist();
 var specialorderlist = [];
 function getspecialorderlist() {
@@ -338,11 +345,12 @@ function getproductlist() {
 		getorderlist();
 	});
 }
+var orderdata;
 function getorderlist() {
 	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/", {sessionid:$.cookie('PHPSESSID'), type:"get_temp_order"}, function(data) {
 		//get the footable object
 		var footable = $('#ordertable').data('footable');
-		var orderdata = data;
+		orderdata = data;
 		//console.log(data);
 		if(orderdata.length > 0 && productlist.length > 0 && specialorderlist.length > 0) {
 			$.each(orderdata, function(key, val) {
@@ -399,6 +407,51 @@ function getorderlist() {
 		});
 	});
 }
+$( "#confirmorder" ).on("click", function( event ) {
+	var url = "http://www.meigic.tw/oaseadmin/oaseadmin/getapi/?type=id";
+	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+		url += "&sessionid=" + $.cookie('PHPSESSID');
+	$.get( url, function(data) {
+		var info = data.split(":");
+			if(info[0] == "success") {
+				var mem_id = info[1];
+				//console.log(data);
+				var phone = "";
+				switch(getbtngroupvalue("phone")) {
+				case "account":
+					phone = mem_phone;
+					break;
+				case "manual":
+					phone = $("#manual_phone").val();
+					break;
+				}
+				var address = "";
+				var u_id = "";
+				switch(getbtngroupvalue("address")) {
+				case "account":
+					address = mem_address;
+					break;
+				case "select":
+					u_id = $("#storedropdown").val();
+					break;
+				case "manual":
+					address = $("#manual_address").val();
+					break;
+				}
+				var params = {sessionid:$.cookie('PHPSESSID'),
+							  mem_id:mem_id,
+							  address:address,
+							  u_id:u_id,
+							  phone:phone,
+							  order:orderdata};
+				//console.log(params);
+				var posting = $.post( "http://www.meigic.tw/oaseadmin/oaseadmin/orderapi/", params );
+				posting.done(function( data ) {
+					console.log(data);
+				});
+			}
+	});
+});
 function QRCode(content, width, height){
 	// 預設寬高為 120x120
 	width = !!width ? width : 120;

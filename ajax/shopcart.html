@@ -171,21 +171,21 @@
 					<input type="radio" name="phone" value="manual"> 手動填寫： <input type="text" class="form-control" placeholder="您的電話" id="manual_phone">
 				  </label>
 				</div>
-				<h4>寄送地址：<h4>
+				<h4>寄送方式：<h4>
 				<div class="btn-group-vertical" data-toggle="buttons" id="address">
 				  <label class="btn btn-warning active" id="mem_address_account">
-					<input type="radio" name="address" value="account"> 來自帳號資訊： <strong id="mem_address"></strong>
+					<input type="radio" name="address" value="account"> 外送地址來自帳號資訊： <strong id="mem_address"></strong>
 				  </label>
 				  <label class="btn btn-warning">
-						<input type="radio" name="address" value="select"> 店鋪取貨： 
+						<input type="radio" name="address" value="manual"> 外送地址手動填寫： <input type="text" class="form-control" placeholder="您的地址" id="manual_address">
+				  </label>
+				  <label class="btn btn-warning">
+						<input type="radio" name="address" value="select"> 店鋪自行取貨： 
 						<div class="form-group">
 							<select type="text" id="storedropdown" class="form-control select2" data-placeholder="請選擇" placeholder="請選擇" tabindex="3">
 								<option></option>
 							</select>
 						</div>
-				  </label>
-				  <label class="btn btn-warning">
-						<input type="radio" name="address" value="manual"> 手動填寫： <input type="text" class="form-control" placeholder="您的地址" id="manual_address">
 				  </label>
 				</div>
 			</div>
@@ -313,6 +313,7 @@ function updateTable(tableid, divid, onCompleteEvent) {
 			onCompleteEvent(false);
 	}
 }
+var totalprice = 0;
 function updateOrderInfo() {
 	var count = 0;
 	var sum = 0;
@@ -324,6 +325,7 @@ function updateOrderInfo() {
 	});
 	$("#count").html(count);
 	$("#sum").html(sum);
+	totalprice = sum;
 }
 function getbtngroupvalue(id) {
 	return $("#" + id).find("label.active").children("input").val();
@@ -443,7 +445,8 @@ $( "#confirmorder" ).on("click", function( event ) {
 							  address:address,
 							  u_id:u_id,
 							  phone:phone,
-							  order:orderdata};
+							  order:orderdata,
+							  totalprice:totalprice};
 				//console.log(params);
 				var posting = $.post( "http://www.meigic.tw/oaseadmin/oaseadmin/orderapi/", params );
 				posting.done(function( data ) {

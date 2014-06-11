@@ -77,11 +77,15 @@
 					<th data-hide="phone">加料</th>
 					<th>數量</th>
 					<th>價格</th>
-					<th data-hide="phone, tablet">QRCode</th>
+					<th data-hide="phone,tablet">QRCode</th>
+					<th data-hide="phone,tablet">寄送方式</th>
+					<th data-hide="phone,tablet">運送電話</th>
+					<th data-hide="phone,tablet">下訂時間</th>
 					<th></th>
 				</thead>
 				<tbody>
 				
+				<!-- <tr>
 				<td>珍珠奶茶</td>
 				<td>大杯</td>
 				<td>半糖</td>
@@ -90,8 +94,11 @@
 				<td>1</td>
 				<td>$40</td>
 				<td><img id="QRTest" class="img-rounded"></img></td>
+				<td>外送；</td>
+				<td>0911567028</td>
+				<td>2014-06-11 07:28:22</td>
 				<td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td>
-				</tr>
+				</tr> -->
 				
 				<!-- <tr>
 				<td>珍珠奶茶</td>
@@ -345,8 +352,12 @@ function getproductlist() {
 		productlist = data.result;
 		//console.log(data);
 		getorderlist();
+		getrecordlist();
 	});
 }
+var sizestringarray = {S:"小杯",M:"中杯",L:"大杯"};
+var sweetstringarray = ["無糖","微糖","半糖","少糖","全糖"];
+var tempstringarray = ["去冰","微冰","半冰","少冰","全冰"];
 var orderdata;
 function getorderlist() {
 	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/", {sessionid:$.cookie('PHPSESSID'), type:"get_temp_order"}, function(data) {
@@ -389,10 +400,6 @@ function getorderlist() {
 					var count = +(val.count);
 					var sum = (productprice + specialorderprice) * count;
 					
-					var sizestringarray = {S:"小杯",M:"中杯",L:"大杯"};
-					var sweetstringarray = ["無糖","微糖","半糖","少糖","全糖"];
-					var tempstringarray = ["去冰","微冰","半冰","少冰","全冰"];
-					
 					var neworder = '<tr><td>' + productname + '</td><td>' + sizestringarray[size] + '</td><td>' + sweetstringarray[sweet - 1] + '</td><td>' + tempstringarray[temp - 1] + '</td><td>' + specialorderstring + '</td><td>' + count + '</td><td>$' + sum + '</td><td><p><a class="text-danger row-delete" style="cursor: pointer;" data-toggle="modal" data-target="#delete"><i class="fa fa-times-circle"></i></a></p></td></tr>';
 					//console.log(neworder);
 					//orderlist.push(neworder);
@@ -407,6 +414,93 @@ function getorderlist() {
 			else
 				$("#nothing").hide();
 		});
+	});
+}
+var recorddata;
+function getrecordlist() {
+	var mem_id;
+	var url = "http://www.meigic.tw/oaseadmin/oaseadmin/getapi/?type=id";
+	if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+		url += "&sessionid=" + $.cookie('PHPSESSID');
+	$.get( url, function(data) {
+		var info = data.split(":");
+			if(info[0] == "success") {
+				var mem_id = info[1];
+				$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/getorderapi/", {sessionid:$.cookie('PHPSESSID'), mid:mem_id}, function(data) {
+					//get the footable object
+					var footable = $('#recordtable').data('footable');
+					
+					recorddata = data;
+					//console.log(mem_id);
+					//console.log(data);
+					
+					if(recorddata.length > 0 && productlist.length > 0 && specialorderlist.length > 0) {
+						$.each(recorddata, function(key, val) {
+							//console.log(val);
+							var code = val.code;
+							var address = val.order_address;
+							var phone = val.phone;
+							var timelog = val.timelog;
+							var order = val.order;
+							var state = +(val.state);
+							$.each(order, function(key, val) {
+								var matchproduct;
+								for(var i = 0; i < productlist.length; i++) {
+									if(productlist[i].id == val.product_id) {
+										matchproduct = productlist[i];
+										break;
+									}
+								}
+								if(typeof matchproduct != 'undefined') {
+									var productname = matchproduct.name;
+									//var productprice = +(matchproduct.price);
+									var sizeprice = {L:matchproduct.price_L, M:matchproduct.price_M, S:matchproduct.price_S};
+									var size = val.size;
+									var productprice = +(sizeprice[size]);
+									var sweet = +(val.sweet);
+									var temp = +(val.temp);
+									var specialorderarray = val.specialorder.split(',');
+									var matchspecialorderlist = [];
+									var specialorderstring = [];
+									var specialorderprice = 0;
+									$.each(specialorderarray, function(index, specialorder) {
+										for(var i = 0; i < specialorderlist.length; i++) {
+											if(specialorderlist[i].id == specialorder) {
+												matchspecialorderlist.push(specialorderlist[i]);
+												specialorderstring.push(specialorderlist[i].name);
+												specialorderprice += +(specialorderlist[i].price);
+												break;
+											}
+										}
+									});
+									specialorderstring = specialorderstring.join("、");
+									var count = +(val.count);
+									var sum = (productprice + specialorderprice) * count;
+									var statemsg;
+									switch(state) {
+									case 0:
+										statemsg = '<td><p><a class="text-default" style="cursor: pointer;" data-placement="top" rel="tooltip" title="等待中"><i class="fa fa-clock-o"></i></a></p></td>';
+										break;
+									case 1:
+										statemsg = '<td><p><a class="text-warning" style="cursor: pointer;" data-placement="top" rel="tooltip" title="製作中"><i class="fa fa-tasks"></i></a></p></td>';
+										break;
+									case 2:
+										statemsg = '<td><p><a class="text-warning" style="cursor: pointer;" data-placement="top" rel="tooltip" title="運送中"><i class="fa fa-truck"></i></a></p></td>';
+										break;
+									case 3:
+										statemsg = '<td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td>';
+										break;
+									}
+									console.log(state);
+									var newrecord = '<tr><td>' + productname + '</td><td>' + sizestringarray[size] + '</td><td>' + sweetstringarray[sweet - 1] + '</td><td>' + tempstringarray[temp - 1] + '</td><td>' + specialorderstring + '</td><td>' + count + '</td><td>$' + sum + '</td><td><img id="QRTest" class="img-rounded" src="' + QRCode(code, 90, 90) + '"></img></td><td>' + address + '</td><td>' + phone + '</td><td>' + timelog + '</td>' + statemsg + '</tr>';
+									footable.appendRow(newrecord);
+								}
+							});
+						});
+					}
+					updateTable("#recordtable", "#recorddiv");
+				});
+			}
 	});
 }
 $( "#confirmorder" ).on("click", function( event ) {
@@ -450,7 +544,12 @@ $( "#confirmorder" ).on("click", function( event ) {
 				//console.log(params);
 				var posting = $.post( "http://www.meigic.tw/oaseadmin/oaseadmin/orderapi/", params );
 				posting.done(function( data ) {
-					console.log(data);
+					//console.log(data);
+					var info = data.split(":");
+					if(info[0] == "success") {
+						$.cookie('PHPSESSID', info[1], { path: '/' });
+						location.reload();
+					}
 				});
 			}
 	});

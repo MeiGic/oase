@@ -548,6 +548,8 @@ $( "#confirmorder" ).on("click", function( event ) {
 					var info = data.split(":");
 					if(info[0] == "success") {
 						$.cookie('PHPSESSID', info[1], { path: '/' });
+						$.get("http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/", {sessionid:$.cookie('PHPSESSID'), type:"remove_temp_order"}, function(data) {
+						});
 						location.reload();
 					}
 				});

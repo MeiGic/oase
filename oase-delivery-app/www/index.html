@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OASE Delivery</title>
+<!--
+    This template can be used for creating apps that require user login and user registration before starting actual app.
+--> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0;" />
+    <meta name = "format-detection" content = "telephone=no"/>
+    <link rel="stylesheet" type="text/css" href="appframework/af.ui.css" />
+    <link rel="stylesheet" type="text/css" href="appframework/icons.css" />
+    <script type="text/javascript" charset="utf-8" src="appframework/appframework.ui.min.js"></script>
+	<script src="http://debug-software.intel.com/target/target-script-min.js#b244aefd-aa91-08bb-5b6a-0b99ed76b6f1"></script>
+    <script>   
+        $.ui.autoLaunch = false; 
+        $.ui.backButtonText = "Back";
+    
+        $(document).ready(function(){
+            $.ui.launch();
+            
+            // setup signin and signup button events
+            $("#login").on("click", function(){
+                signIn();
+            });
+			
+			$("#logout").on("click", function(){
+                signOut();
+            });
+            
+            $("#register").on("click", function(){
+                //signUp();
+            });
+        });
+                
+        function signIn(){
+            
+            // sigin code here
+            // Send the data using post
+			var url = "http://www.meigic.tw/oaseadmin/oaseadmin/authapi/";
+			var params = {username:$("#username").val(),password:$("#password").val()};
+			$.post( url, params, function( data ) {
+				console.log(data);
+				if(data == "false")
+					$("#msg").html("登入失敗:(");
+				else {
+					$("#msg").html("登入成功！");
+					$.ui.loadContent("main", null, null, "fade");
+				}
+			});
+        }
+		
+		function signOut(){
+			$("#msg").html("");
+            $.ui.loadContent("welcome", null, null, "fade");
+			// clears all back button history
+            $.ui.clearHistory(); 
+        }
+                
+        function signUp(){
+        
+            // signup code here
+            
+            $.ui.loadContent("main", null, null, "fade");
+        }   
+                
+        function startApp(){
+            // clears all back button history
+            $.ui.clearHistory();  
+            fetchlist();
+            // your app code here
+        }
+
+		function fetchlist() {
+			$.get("http://www.meigic.tw/oaseadmin/oaseadmin/getdeliverorder/", function(data) {
+				//console.log(data);
+				console.log("FetchSuccess");
+				$("#orderlist").html("");
+				var obj = $.parseJSON(data);
+				$.each(obj, function(index, val) {
+					$("#orderlist").append('<li><a class="button" onclick="scan(' + val.id + ')"><b>訂單編號 #' + val.id + '</b><br>' + val.order_address + ' 下定時間：' + val.timelog + '</a></li>');
+					$.post( "http://www.meigic.tw/oaseadmin/oaseadmin/changeorderstateapi/", {id:val.id,state:2}, function( data ) {
+						if(data == "success")
+							console.log("state(2):" + val.id);
+					});
+				});
+			});
+			setTimeout(fetchlist, 5000);
+		}
+    </script>   
+	<style>
+/* css for custom list item, modify as needed */        
+#afui #listview .list li {padding:10px 20px 10px 10px}
+.list-image {float:left;width:50px;height:50px}
+.list-text {margin-left:60px;min-height:50px}        
+    </style>  
+</head>
+<body> 
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+	var delivery_id;
+	function onBodyLoad()
+	{
+		document.addEventListener("deviceready", onDeviceReady, false);
+	}
+	function success(resultArray) {
+		$.post( "http://www.meigic.tw/oaseadmin/oaseadmin/verifycode/", {id:delivery_id, code:resultArray[0]}, function( data ) {
+			if(data == "true") {
+				$.post( "http://www.meigic.tw/oaseadmin/oaseadmin/changeorderstateapi/", {id:delivery_id,state:3}, function( data ) {
+					if(data == "success") {
+						alert("成功送達： 訂單編號#" + delivery_id);
+						console.log("state(3):" + delivery_id);
+						fetchlist();
+					}
+					else
+						alert("更改失敗： 訂單編號#" + delivery_id);
+				});
+			} else {
+				alert("驗證失敗： 訂單編號#" + delivery_id);
+			}
+		});
+		//alert("Scanned " + resultArray[0] + " code: " + resultArray[1]);
+
+		// NOTE: Scandit SDK Phonegap Plugin Versions 1.* for iOS report
+		// the scanning result as a concatenated string.
+		// Starting with version 2.0.0, the Scandit SDK Phonegap
+		// Plugin for iOS reports the result as an array
+		// identical to the way the Scandit SDK plugin for Android reports results.
+
+		// If you are running the Scandit SDK Phonegap Plugin Version 1.* for iOS,
+		// use the following approach to generate a result array from the string result returned:
+		// resultArray = result.split("|");
+	}
+
+	function failure(error) {
+		alert("掃描失敗： 訂單編號#" + delivery_id + "錯誤訊息： " + error);
+	}
+
+	function scan(scan_id) {
+		delivery_id = scan_id;
+		// See below for all available options.
+		cordova.exec(success, failure, "ScanditSDK", "scan",
+			 ["/Jc1Iu8cEeOECBxTIoQWDgBCVpt0q6159XxqHVZ4gBs",
+			  {"disableStandbyState" : true}]);
+	}
+
+	app.initialize();
+</script>
+<div id="afui" class="android light">
+    
+    <div id="content" style=""> 
+        
+    <!-- Views -->
+        
+        <!-- Welcome View -->
+        <div class="panel" title="歡迎" id="welcome" data-header="none" data-footer="none" selected="true">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <h1>歡迎</h1>
+			<br>
+			<img src="img/logo.png" style="max-width:100px;"/>
+            <br>
+            <br>
+            <p>OASE運送訂單系統</p>
+			<p>請先登入</p>
+            <br>
+            <br>
+            </div>    
+            <ul class="list inset">
+                <li><a href="#signin" class="icon user" style="text-align:center">登入</a></li>
+                <!-- <li><a href="#signup" class="icon pencil" style="text-align:center">Register</a></li>
+				<li><a class="icon camera" style="text-align:center" value="scan" onclick="scan()">Scan</a></li> -->
+            </ul>
+        </div>
+        
+        <!-- Login View -->
+        <div class="panel" title="登入" id="signin" data-footer="none">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <p>請輸入OASE提供的帳號與密碼</p>
+            <br>
+            <br>
+            </div>
+            <input id="username" name="username" type="text" placeholder="帳號" />
+            <input id="password" name="password" type="password" placeholder="密碼" />
+            <a class="button block green" href="#" id="login">登入</a>
+			<br>
+			<h2 id="msg" style="text-align:center"></h2>
+        </div>
+        
+        <!-- Register View -->
+        <!-- <div class="panel" title="Register" id="signup" data-footer="none">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <p>This is space for register message</p>
+            <br>
+            <br>
+            </div>
+            <input name="name" type="text" placeholder="Name" />
+            <input name="email" type="text" placeholder="Email" />
+            <input name="username" type="text" placeholder="username" />
+            <input name="password" type="password" placeholder="password" />
+            <input name="password2" type="password" placeholder="confirm password" />
+            <a class="button block green" href="#" id="register">Register</a>
+        </div> -->
+        
+        <!-- Main App View -->
+		<footer id="default">
+			<a class="button block green" href="#" id="logout">登出</a>
+		</footer>
+        <div class="panel" title="運送訂單" id="main" data-load="startApp" style="text-align:center" data-footer="default">
+            <p>掃描客戶的QRCode以完成運送</p>
+			<ul class="list" id="orderlist">
+                <!-- <li>
+                    <a class="button" onclick="scan(1)"><b>訂單編號 #10050</b><br>台北市中山路一段184巷</a>
+                </li>
+                <li>
+                    <a class="button" onclick="scan(2)"><b>訂單編號 #10050</b><br>台北市中山路一段184巷</a>
+                </li>
+				<li>
+                    <a class="button" onclick="scan(3)"><b>訂單編號 #10050</b><br>台北市中山路一段184巷</a>
+                </li>
+				<li>
+                    <a class="button" onclick="scan(4)"><b>訂單編號 #10050</b><br>台北市中山路一段184巷</a>
+                </li>
+				<li>
+                    <a class="button" onclick="scan(5)"><b>訂單編號 #10050</b><br>台北市中山路一段184巷</a>
+                </li>
+				<li>
+                    <a class="button" onclick="scan(6)"><b>訂單編號 #10050</b><br>台北市中山路一段184巷</a>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>    

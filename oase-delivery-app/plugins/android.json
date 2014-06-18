@@ -1,0 +1,29 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "res/xml/config.xml": {
+            "/widget": {
+                "<feature name=\"ScanditSDK\"><param name=\"android-package\" value=\"com.mirasense.scanditsdk.plugin.ScanditSDK\" /></feature>": 1
+            }
+        },
+        "AndroidManifest.xml": {
+            "/manifest": {
+                "<uses-permission android:name=\"android.permission.CAMERA\" />": 1,
+                "<uses-permission android:name=\"android.permission.VIBRATE\" />": 1,
+                "<uses-permission android:name=\"android.permission.INTERNET\" />": 1
+            },
+            "/manifest/application": {
+                "<activity android:name=\"com.mirasense.scanditsdk.plugin.ScanditSDKActivity\" />": 1
+            }
+        }
+    },
+    "installed_plugins": {
+        "com.mirasense.scanditsdk.plugin": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        }
+    },
+    "dependent_plugins": {}
+}

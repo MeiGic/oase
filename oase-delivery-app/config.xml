@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.cordova.hellocordova" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>OASE Delivery</name>
+    <description>
+        A Delivery System using in OASE.
+    </description>
+    <author email="officialmeigic@gmail.com" href="http://github.com/MeiGic/oase/">
+        MeiGic 2014
+    </author>
+	<preference name="Fullscreen" value="true" />
+	<preference name="Orientation" value="portrait" />
+	<icon src="www/img/icon.png" width="256" height="256" />
+    <content src="index.html" />
+    <access origin="*" />
+</widget>

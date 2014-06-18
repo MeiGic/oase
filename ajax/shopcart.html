@@ -7,7 +7,7 @@
 	</div>
 	<div id="orderdiv">
 		<div class="panel panel-default">
-			<table id="ordertable" class="table table-responsive table-hover text-center footable toggle-circle-filled">      
+			<table id="ordertable" class="table table-responsive table-hover text-center toggle-circle-filled">      
 				<thead class="text-center">
 					<th>飲品</th>
 					<th>大小</th>
@@ -68,7 +68,7 @@
 			<h2>歷史</h2>
 		</div>
 		<div class="panel panel-default">
-			<table id="recordtable" class="table table-hover text-center footable toggle-circle-filled">      
+			<table id="recordtable" class="table table-responsive table-hover text-center toggle-circle-filled">      
 				<thead class="text-center">
 					<th>飲品</th>
 					<th>大小</th>
@@ -85,7 +85,7 @@
 				</thead>
 				<tbody>
 				
-				<!-- <tr>
+				<tr>
 				<td>珍珠奶茶</td>
 				<td>大杯</td>
 				<td>半糖</td>
@@ -98,7 +98,7 @@
 				<td>0911567028</td>
 				<td>2014-06-11 07:28:22</td>
 				<td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td>
-				</tr> -->
+				</tr>
 				
 				<!-- <tr>
 				<td>珍珠奶茶</td>
@@ -250,13 +250,10 @@ $.get( url, function(data) {
 			} else
 				$("#mem_address_account").remove();
 });
-$('[rel="tooltip"]').tooltip();
-$("#ordertable").footable();
-$("#recordtable").footable();
 $("#nothing").hide();
 $("#orderdiv").hide();
 $("#recorddiv").hide();
-updateTable("#recordtable", "#recorddiv");
+//updateTable("#recordtable", "#recorddiv");
 $('table').footable().on('click', '.row-delete', function(e) {
     e.preventDefault();
     //get the footable object
@@ -319,6 +316,7 @@ function updateTable(tableid, divid, onCompleteEvent) {
 		if(onCompleteEvent)
 			onCompleteEvent(false);
 	}
+	$('[rel="tooltip"]').tooltip();
 }
 var totalprice = 0;
 function updateOrderInfo() {
@@ -353,6 +351,7 @@ function getproductlist() {
 		//console.log(data);
 		getorderlist();
 		getrecordlist();
+		//EndLoad();
 	});
 }
 var sizestringarray = {S:"小杯",M:"中杯",L:"大杯"};
@@ -362,6 +361,13 @@ var orderdata;
 function getorderlist() {
 	$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/", {sessionid:$.cookie('PHPSESSID'), type:"get_temp_order"}, function(data) {
 		//get the footable object
+		/*$('#ordertable').footable(
+		{
+					debug: true,
+					log: function(message, type) {
+						console.log(message);
+					}
+		});*/
 		var footable = $('#ordertable').data('footable');
 		orderdata = data;
 		//console.log(data);
@@ -428,7 +434,17 @@ function getrecordlist() {
 				var mem_id = info[1];
 				$.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/getorderapi/", {sessionid:$.cookie('PHPSESSID'), mid:mem_id}, function(data) {
 					//get the footable object
+					/*$('#recordtable').footable(
+					{
+								debug: true,
+								log: function(message, type) {
+									console.log(message);
+								}
+					});*/
 					var footable = $('#recordtable').data('footable');
+					
+					//$('#recordtable').trigger('footable_resize');
+					//$('#recordtable').trigger('footable_redraw');
 					
 					recorddata = data;
 					//console.log(mem_id);
@@ -491,9 +507,13 @@ function getrecordlist() {
 										statemsg = '<td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td>';
 										break;
 									}
-									console.log(state);
+									//console.log(state);
 									var newrecord = '<tr><td>' + productname + '</td><td>' + sizestringarray[size] + '</td><td>' + sweetstringarray[sweet - 1] + '</td><td>' + tempstringarray[temp - 1] + '</td><td>' + specialorderstring + '</td><td>' + count + '</td><td>$' + sum + '</td><td><img id="QRTest" class="img-rounded" src="' + QRCode(code, 90, 90) + '"></img></td><td>' + address + '</td><td>' + phone + '</td><td>' + timelog + '</td>' + statemsg + '</tr>';
 									footable.appendRow(newrecord);
+									//var $row = $(this).parents('tr:first');
+									//footable.toggleDetail($row);
+									//console.log(newrecord);
+									//footable.appendRow('<tr><td>珍珠奶茶</td><td>大杯</td><td>半糖</td><td>少冰</td><td>粉條</td><td>1</td><td>$40</td><td><img id="QRTest" class="img-rounded"></img></td><td>外送；</td><td>0911567028</td><td>2014-06-11 07:28:22</td><td><p><a class="text-success" style="cursor: pointer;" data-placement="top" rel="tooltip" title="已送達"><i class="fa fa-check"></i></a></p></td></tr>');
 								}
 							});
 						});
@@ -556,6 +576,7 @@ $( "#confirmorder" ).on("click", function( event ) {
 			}
 	});
 });
+$('#context').css('height', '100px');
 function QRCode(content, width, height){
 	// 預設寬高為 120x120
 	width = !!width ? width : 120;

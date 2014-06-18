@@ -70,7 +70,8 @@
 				</div>
 				<br>
 				<input type="text" id="count" class="form-control" />
-				<h2 id="productprice" class="text-danger"></h2>
+				<h4 id="productsingleprice" class="text-danger"></h4>
+				<h2 id="producttotalprice" class="text-danger"></h2>
 				<div id="msg" class="row">
 					<h2 id="fail" class="text-danger"></h2>
 					<h2 id="success" class="text-success"></h2>
@@ -229,7 +230,8 @@ function updatetotalprice() {
 	totalprice = +(sizeprice[size]) + +(otherprice);
 	//console.log(totalprice);
 	var sum = totalprice * +($("#count").val());
-	$( "#detail #productprice" ).html("NTD$ " + sum);
+	$( "#detail #productsingleprice" ).html("每杯 NTD$ " + totalprice);
+	$( "#detail #producttotalprice" ).html("共計 NTD$ " + sum);
 }
 $(function () {
 	$('body').css('overflow-x','hidden');

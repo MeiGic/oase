@@ -1,0 +1,73 @@
+<?php partialView('header'); ?>
+<div class="main-bar">
+    <h3>
+        <i class="fa fa-beer"></i> 點餐系統 <i class="fa fa-angle-right"></i> 訂單管理
+    </h3>
+</div>
+<?php partialView('menu' , $data); ?>
+<div id="content">
+    <div class="outer">
+        <div class="inner">
+            <div class="row">
+                <div class="col-lg-12" style="margin-top: 10px;">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="view">
+                            <div class="box">
+                                <header>
+                                    <div class="icons">
+                                        <i class="fa fa-table"></i>
+                                    </div>
+                                    <h5>訂單列表</h5>
+                                </header>
+                                <div id="stripedTable" class="body collapse in">
+                                    <table id="dataTable"
+                                           class="table table-borderedd table-condensed table-striped table-hover datatable order_view">
+                                        <thead>
+                                        <tr>
+                                            <th>編號</th>
+                                            <th>時間</th>
+                                            <th>價錢</th>
+                                            <th></th>
+                                            <td></td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                    for($i = 0 ; $i<count($data['order']);$i++){
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $data['order'][$i]['id'] ?></td>
+                                            <td><?php echo $data['order'][$i]['order_time'] ?></td>
+                                            <td><?php echo $data['order'][$i]['price'] ?></td>
+                                            <td>
+                                                <button class="btn-xs btn-default btn-info view">
+                                                詳細訂單
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if($data['order'][$i]['state'] < 3){
+                                                ?>
+                                                <button class="btn-xs btn-default btn-primary finish">
+                                                    完成
+                                                </button>
+                                                <?php
+                                                }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php partialView('footer'); ?>

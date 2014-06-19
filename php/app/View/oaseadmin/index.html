@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OASE Login</title>
+    <link href="<?php resource('css/bootstrap.css'); ?>" rel="stylesheet" />
+    <link href="<?php resource('css/main.css'); ?>" rel="stylesheet" />
+    <link href="<?php resource('css/theme.css'); ?>" rel="stylesheet" />
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+    <link href="css/theme.css" rel="stylesheet" />
+    <style>
+        .login{
+            background: none;
+        }
+    </style>
+</head>
+<body>
+<div class="login">
+    <div class="text-center">
+        <p style="color:#ffffff;">OASE Admin</p>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <form class="form-signin" action="<?php url('login','oaseadmin',null,true); ?>" method="post">
+                <p class="text-muted">Enter your username and password</p>
+                <input name="username" type="text" class="form-control" placeholder="Username" />
+                <input name="password" type="password" class="form-control" placeholder="Password" />
+                <button class="btn btn-primary btn-block btn-lg">
+                    Sign in
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+<script src="<?php resource('js/jquery-2.1.1.js'); ?>"></script>
+<script src="<?php resource('js/bootstrap.js');?>"></script>
+</html>

@@ -1,0 +1,254 @@
+<?php partialView('header'); ?>
+<div class="main-bar">
+    <h3>
+        <i class="fa fa-coffee"></i> 產品系統 <i class="fa fa-angle-right"></i> 產品管理
+    </h3>
+</div>
+<?php partialView('menu' , $data); ?>
+<div id="content">
+<div class="outer">
+<div class="inner">
+<div class="row">
+
+
+<div class="col-lg-12" style="margin-top: 10px;">
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#view" data-toggle="tab">產品列表</a>
+    </li>
+    <li>
+        <a href="#addunit" data-toggle="tab">新增產品</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="view">
+        <div class="editunit">
+            <div class="box dark">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-edit"></i>
+                    </div>
+                    <h5>修改產品</h5>
+
+                    <div class="toolbar">
+                        <nav style="padding: 8px;">
+                            <a class="btn btn-default btn-xs collapse-box">
+                                <i class="fa fa-minus"></i>
+                            </a>
+                            <a class="btn btn-default btn-danger btn-xs close-box">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </nav>
+                    </div>
+                </header>
+                <div class="body">
+                    <form id="editproductform" class="form-horizontal" method="post" enctype="multipart/form-data"
+                          action="<?php url('editproduct' , 'oaseadmin' , null , true); ?>">
+                        <input type="hidden" name="id">
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="name">產品名稱*</label>
+
+                            <div class="col-lg-10">
+                                <input required id="name" name="name" type="text" class="form-control"
+                                       placeholder="Product Name"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="category">產品分類*</label>
+
+                            <div class="col-lg-10">
+                                <select required id="category" name="category" class="form-control">
+                                    <?php foreach($data['cate'] as $value){ ?>
+                                    <option value="<?=$value['id']?>"><?=$value['name']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="img">飲料圖片*</label>
+                            <div class="col-lg-10">
+                                <img id="editproductformimage" width="80px" />
+                                <input id="img" name="img" type="file" class="form-control">
+                                <div class="label label-info">選擇檔案將會蓋掉舊的產品圖片</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="L">大杯價錢</label>
+
+                            <div class="col-lg-10">
+                                <input id="L" name="L" type="text" class="form-control"
+                                       placeholder="L size Price"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="M">中杯價錢</label>
+
+                            <div class="col-lg-10">
+                                <input id="M" name="M" type="text" class="form-control" placeholder="M size Price" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="S">小杯價錢</label>
+
+                            <div class="col-lg-10">
+                                <input id="S" name="S" type="text" class="form-control" placeholder="S size Price" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-offset-2" style="padding: 0 14px;">
+                                <button style="" type="submit" class="btn btn-default btn-primary btn-lg">
+                                    完成
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <header>
+                <div class="icons">
+                    <i class="fa fa-table"></i>
+                </div>
+                <h5>產品列表</h5>
+            </header>
+            <div id="stripedTable" class="body collapse in">
+                <table id="dataTable" class="table table-borderedd table-condensed table-striped table-hover datatable product_view">
+                    <thead>
+                    <tr>
+                        <th>編號</th>
+                        <th>名稱</th>
+                        <th>分類</th>
+                        <th>大杯價錢</th>
+                        <th>中杯價錢</th>
+                        <th>小杯價錢</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                                    for($i = 0 ; $i<count($data['product']);$i++){
+                                    ?>
+                    <tr>
+                        <td><?php echo $data['product'][$i]['id'] ?></td>
+                        <td><?php echo $data['product'][$i]['name'] ?></td>
+                        <td><?php echo $data['product'][$i]['product_category_name']?></td>
+                        <td><?php echo $data['product'][$i]['price_L'] ?></td>
+                        <td><?php echo $data['product'][$i]['price_M'] ?></td>
+                        <td><?php echo $data['product'][$i]['price_S'] ?></td>
+                        <td>
+                            <button class="btn btn-primary btn-default btn-sm edit">
+                                Edit
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-default btn-sm delete">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                    <?php
+                                    }
+                                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="addunit">
+        <div class="box dark">
+            <header>
+                <div class="icons">
+                    <i class="fa fa-edit"></i>
+                </div>
+                <h5>新增產品</h5>
+
+                <div class="toolbar">
+                    <nav style="padding: 8px;">
+                        <a class="btn btn-default btn-xs collapse-box">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </nav>
+                </div>
+            </header>
+            <div class="body">
+                <form id="insertproduct" class="form-horizontal" method="post" enctype="multipart/form-data"
+                      action="<?php url('insertproduct' , 'oaseadmin' , null , true); ?>">
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="name">產品名稱*</label>
+
+                        <div class="col-lg-10">
+                            <input required id="name" name="name" type="text" class="form-control"
+                                   placeholder="Product Name"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="category">產品分類*</label>
+
+                        <div class="col-lg-10">
+                            <select required id="category" name="category" class="form-control">
+                                <?php foreach($data['cate'] as $value){ ?>
+                                <option value="<?=$value['id']?>"><?=$value['name']?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="img">飲料圖片*</label>
+                        <div class="col-lg-10">
+                            <input required id="img" name="img" type="file" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="L">大杯價錢</label>
+
+                        <div class="col-lg-10">
+                            <input id="L" name="L" type="text" class="form-control"
+                                   placeholder="L size Price"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="M">中杯價錢</label>
+
+                        <div class="col-lg-10">
+                            <input id="M" name="M" type="text" class="form-control" placeholder="M size Price" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="S">小杯價錢</label>
+
+                        <div class="col-lg-10">
+                            <input id="S" name="S" type="text" class="form-control" placeholder="S size Price" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-offset-2" style="padding: 0 14px;">
+                            <button style="" type="submit" class="btn btn-default btn-primary btn-lg">
+                                完成
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<?php partialView('footer'); ?>

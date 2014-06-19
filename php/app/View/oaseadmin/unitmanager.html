@@ -1,0 +1,318 @@
+<?php partialView('header'); ?>
+<div class="main-bar">
+    <h3>
+        <i class="fa fa-ambulance"></i> 機構系統 <i class="fa fa-angle-right"></i> 部門管理
+    </h3>
+</div>
+<?php partialView('menu' , $data); ?>
+<div id="content">
+<div class="outer">
+<div class="inner">
+<div class="row">
+
+
+<div class="col-lg-12" style="margin-top: 10px;">
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#view" data-toggle="tab">部門列表</a>
+    </li>
+    <li>
+        <a href="#addunit" data-toggle="tab">新增部門</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="view">
+        <div class="editunit">
+            <div class="box dark">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-edit"></i>
+                    </div>
+                    <h5>修改部門</h5>
+
+                    <div class="toolbar">
+                        <nav style="padding: 8px;">
+                            <a class="btn btn-default btn-xs collapse-box">
+                                <i class="fa fa-minus"></i>
+                            </a>
+                            <a class="btn btn-default btn-danger btn-xs close-box">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </nav>
+                    </div>
+                </header>
+                <div class="body">
+                    <form id="editUnitForm" name="editUnitFrom" class="form-horizontal" method="post"
+                          action="<?php url('editunit' , 'oaseadmin' , null , true); ?>">
+                        <input type="hidden" name="unitid"/>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="unitname">部門名稱*</label>
+
+                            <div class="col-lg-10">
+                                <input required name="unitname" type="text" class="form-control"
+                                       placeholder="Unit Name"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="unitaddress">部門位置*</label>
+
+                            <div class="col-lg-10">
+                                <input required name="unitaddress" type="text" class="form-control"
+                                       placeholder="Unit Address"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="longitude">經度</label>
+
+                            <div class="col-lg-10">
+                                <input id="longitude" name="longitude" type="text" class="form-control"
+                                       placeholder="Longitude"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="latitude">緯度</label>
+
+                            <div class="col-lg-10">
+                                <input id="latitude" name="latitude" type="text" class="form-control"
+                                       placeholder="Latitude"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="unittype">部門型態</label>
+
+                            <div class="col-lg-10">
+                                <select required id="unittype" name="unittype" class="form-control">
+                                    <?php foreach($data['type'] as $value){ ?>
+                                    <option value="<?=$value['id']?>"><?=$value['name']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="foundtime">創立時間*</label>
+
+                            <div class="col-lg-2">
+                                <div class="input-group" style="float:right;">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                    <input required id="foundtime" name="foundtime" type="text" class="form-control"
+                                           placeholder="Found Time"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2" for="manager">部門主管</label>
+
+                            <div class="col-lg-10">
+                                <select id="type" name="manager" class="form-control">
+                                    <option value="">&nbsp;</option>
+                                    <?php foreach($data['employee'] as $value){ ?>
+                                    <option value="<?=$value['id']?>"><?=$value['name']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2" style="padding: 0 14px;">
+                                <button style="" type="submit" class="btn btn-default btn-primary btn-lg">
+                                    修改
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <header>
+                <div class="icons">
+                    <i class="fa fa-table"></i>
+                </div>
+                <h5>部門列表</h5>
+            </header>
+            <div id="stripedTable" class="body collapse in">
+                <table id="dataTable" class="table table-borderedd table-condensed table-striped table-hover datatable unit_view">
+                    <thead>
+                    <tr>
+                        <th>編號</th>
+                        <th>名稱</th>
+                        <th>位置</th>
+                        <th>經度</th>
+                        <th>緯度</th>
+                        <th>型態</th>
+                        <th>創立時間</th>
+                        <th>主管</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                                    for($i = 0 ; $i<count($data['unit']);$i++){
+                                    ?>
+                    <tr>
+                        <td><?php echo $data['unit'][$i]['id'] ?></td>
+                        <td><?php echo $data['unit'][$i]['name'] ?></td>
+                        <td><?php echo $data['unit'][$i]['address'] ?></td>
+                        <td><?php echo $data['unit'][$i]['longitude'] ?></td>
+                        <td><?php echo $data['unit'][$i]['latitude'] ?></td>
+                        <td>
+                            <?php
+                            foreach($data['type'] as $value){
+                                if($value['id'] ==$data['unit'][$i]['type']){
+                                  echo $value['name'];
+                                 }
+                            }
+                            ?>
+                        </td>
+                        <td><?php echo $data['unit'][$i]['found_time'] ?></td>
+                        <td>
+                            <?php
+                             foreach($data['employee'] as $value){
+
+                                 if($value['id'] == $data['unit'][$i]['manager']){
+                                  echo $value['name'];
+                                 }
+
+                             }
+                             ?>
+
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-default btn-sm edit">
+                                Edit
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-default btn-sm delete">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                    <?php
+                                    }
+                                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="addunit">
+        <div class="box dark">
+            <header>
+                <div class="icons">
+                    <i class="fa fa-edit"></i>
+                </div>
+                <h5>新增部門</h5>
+
+                <div class="toolbar">
+                    <nav style="padding: 8px;">
+                        <a class="btn btn-default btn-xs collapse-box">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </nav>
+                </div>
+            </header>
+            <div class="body">
+                <form id="insertUnitForm" class="form-horizontal" method="post"
+                      action="<?php url('addunit' , 'oaseadmin' , null , true); ?>">
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="unitname">部門名稱*</label>
+
+                        <div class="col-lg-10">
+                            <input required id="unitname" name="unitname" type="text" class="form-control"
+                                   placeholder="Unit Name"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="unitaddress">部門位置*</label>
+
+                        <div class="col-lg-10">
+                            <input required id="unitaddress" name="unitaddress" type="text" class="form-control"
+                                   placeholder="Unit Address"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="longitude">經度</label>
+
+                        <div class="col-lg-10">
+                            <input id="longitude" name="longitude" type="text" class="form-control"
+                                   placeholder="Longitude"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="latitude">緯度</label>
+
+                        <div class="col-lg-10">
+                            <input id="latitude" name="latitude" type="text" class="form-control"
+                                   placeholder="Latitude"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="unittype">部門型態</label>
+
+                        <div class="col-lg-10">
+                            <select required id="unittype" name="unittype" class="form-control">
+                                <?php foreach($data['type'] as $value){ ?>
+                                <option value="<?=$value['id']?>"><?=$value['name']?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="foundtime">創立時間*</label>
+
+                        <div class="col-lg-2">
+                            <div class="input-group" style="float:right;">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                <input required id="foundtime" name="foundtime" type="text" class="form-control"
+                                       placeholder="Found Time"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="manager">部門主管</label>
+
+                        <div class="col-lg-10">
+                            <select id="type" name="manager" class="form-control">
+                                <option value="">&nbsp;</option>
+                                <?php foreach($data['employee'] as $value){ ?>
+                                <option value="<?=$value['id']?>"><?=$value['name']?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-2" style="padding: 0 14px;">
+                            <button style="" type="submit" class="btn btn-default btn-primary btn-lg">
+                                完成
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<?php partialView('footer'); ?>

@@ -1,8 +1,14 @@
-Options +Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /~vagrant/oaseadmin
+    RewriteOptions MaxRedirects=2
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)\.([\d\D]+)$ public/$1.$2 [C]
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule . . [F,L]
 
-RewriteRule ^(.*)$ index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php [L]
+
+</IfModule>

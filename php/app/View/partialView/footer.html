@@ -1,0 +1,287 @@
+co</div>
+<div id="footer">
+    <p>2014 &copy; Oase</p>
+</div>
+<script src="<?php resource('js/jquery-2.1.1.js'); ?>"></script>
+<script src="<?php resource('js/bootstrap.js');?>"></script>
+<script src="<?php resource('lib/screenfull/screenfull.js'); ?>"></script>
+<script src="<?php resource('js/main.js'); ?>"></script>
+<script src="<?php resource('lib/datatables/jquery.dataTables.js'); ?>"></script>
+<script src="<?php resource('lib/datatables/DT_bootstrap.js'); ?>"></script>
+<script src="<?php resource('lib/datepicker/js/bootstrap-datepicker.js'); ?>" ></script>
+<script src="<?php resource('lib/timepicker/js/bootstrap-timepicker.js'); ?>" ></script>
+<script>
+    $(function(){
+        $('#foundtime').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+
+        $('#foundtime2').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+
+        $('#birthday').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+
+        var table = $('#dataTable').dataTable({
+            "sPaginationType": "bootstrap"
+        });
+
+        $('.editunit .box').hide();
+        $('#editemployeeform .box').hide();
+
+
+        $('.unit_view tbody').on('click' , '.delete' , function(e){
+            $id = $(this).parents('tr').children('td').first().text();
+            $c = confirm("確定要刪除編號" + $id + "的部門?");
+            if($c){
+                $.post("<?=url('deleteunit' , 'oaseadmin');?>" , {
+                    id :$id
+                }).done(function(data){
+                    history.go(0);
+                });
+            }
+        });
+
+        $('.order_view tbody').on('click' , '.view' , function(){
+            $id = $(this).parents('tr').children('td').first().text();
+            $.post("<?=url('getorderdetailapi' , 'oaseadmin');?>" , {
+                id: $id
+            }).done(function(data){
+                var d = JSON.parse(data);
+                var str = "";
+                for(var k in d){
+                    str = str + d[k].product_name + " " + d[k].size + " ";
+                    switch(d[k].sweet){
+                        case "1":
+                            str += "全糖" + " ";
+                            break;
+                        case "2":
+                            str += "少糖" + " ";
+                            break;
+                        case "3":
+                            str += "半糖" + " ";
+                            break;
+                        case "4":
+                            str += "微糖" + " ";
+                            break;
+                        case "5":
+                            str += "無糖" + " ";
+                            break;
+                    }
+
+                    switch(d[k].temp){
+                        case "1":
+                            str += "全冰" + " ";
+                            break;
+                        case "2":
+                            str += "少冰" + " ";
+                            break;
+                        case "3":
+                            str += "半冰" + " ";
+                            break;
+                        case "4":
+                            str += "微冰" + " ";
+                            break;
+                        case "5":
+                            str += "去冰" + " ";
+                            break;
+                    }
+
+                    str += " 加料："
+                    for(var so in d[k].so){
+                        str += d[k].so[so].product_special_name +","
+                    }
+                    if(d[k].so.length == 0){
+                        str += "無";
+                    }
+                    str += "     ";
+                    str += d[k].count + "杯 "
+
+                    str += "\r\n"
+                }
+                alert(str);
+            });
+        });
+
+        $('.order_view tbody').on('click' , '.finish' , function(){
+
+            $id = $(this).parents('tr').children('td').first().text();
+            $c = confirm("確定要完成編號" + $id + "的訂單?");
+            if($c){
+                $.post("<?=url('changeorderstateapi' , 'oaseadmin');?>" , {
+                    id :$id,
+                    state: 3
+                }).done(function(data){
+                    history.go(0);
+                });
+            }
+        });
+
+        $('.unit_view tbody').on('click' , '.edit' , function(){
+
+            $('.editunit .box').show('300');
+
+            $id = $(this).parents('tr').children('td').first().text();
+            $name = $(this).parents('tr').children('td').eq(1).text();
+            $address = $(this).parents('tr').children('td').eq(2).text();
+            $long = $(this).parents('tr').children('td').eq(3).text();
+            $lat = $(this).parents('tr').children('td').eq(4).text();
+            $type = $(this).parents('tr').children('td').eq(5).text();
+            $ft = $(this).parents('tr').children('td').eq(6).text();
+            $man = $(this).parents('tr').children('td').eq(7).text();
+            $('#editUnitForm input[name=unitid]').val($id);
+            $('#editUnitForm input[name=unitname]').val($name);
+            $('#editUnitForm input[name=unitaddress]').val($address);
+            $('#editUnitForm input[name=longitude]').val($long);
+            $('#editUnitForm input[name=latitude]').val($lat);
+            $('#editUnitForm #unittype option').each(function(){
+                if(this.text == $.trim($type)){
+                    this.selected = true;
+                }
+            });
+            $('#editUnitForm input[name=foundtime]').val($ft);
+            $('#editUnitForm option').each(function(){
+                if(this.text == $.trim($man)){
+                    this.selected = true;
+                }
+            });
+            $('#editUnitForm input[name=manager]').val($man);
+            $('#editUnitForm input[name=unitid]').focus();
+        });
+
+        $('.product_category_view tbody').on('click' , '.edit' , function(){
+            $('.editunit .box').show('300');
+            $id = $(this).parents('tr').children('td').first().text();
+            $name = $(this).parents('tr').children('td').eq(1).text();
+            $('#editUnitForm input[name=id]').val($id);
+            $('#editUnitForm input[name=name]').val($name);
+        });
+
+        $('.product_category_view tbody').on('click' , '.delete' , function(){
+            $id = $(this).parents('tr').children('td').first().text();
+            $c = confirm("確定要刪除編號" + $id + "的分類?");
+            if($c){
+                $.post("<?=url('deleteproductcategory' , 'oaseadmin');?>" , {
+                    id :$id
+                }).done(function(data){
+                    history.go(0);
+                });
+            }
+        });
+
+        $('.product_view tbody').on('click' , '.edit' , function(){
+            $id = $(this).parents('tr').children('td').first().text();
+            $name = $(this).parents('tr').children('td').eq(1).text();
+            $cate = $(this).parents('tr').children('td').eq(2).text();
+            $L = $(this).parents('tr').children('td').eq(3).text();
+            $M = $(this).parents('tr').children('td').eq(4).text();
+            $S = $(this).parents('tr').children('td').eq(5).text();
+
+            $('#editproductform input[name=id]').val($id);
+            $('#editproductform input[name=name]').val($name);
+
+            $('#editproductform #category option').each(function(){
+                if(this.text == $.trim($cate)){
+                    this.selected = true;
+                }
+            });
+
+            $("#editproductformimage").attr('src' ,"<?=WEB_ROOT?>/upload/product/"+$id+".jpg" );
+
+            $('#editproductform input[name=L]').val($L);
+            $('#editproductform input[name=M]').val($M);
+            $('#editproductform input[name=S]').val($S);
+            $(".editunit .box").show('slow');
+
+        });
+
+        $('.product_view tbody').on('click' , '.delete' , function(){
+            $id = $(this).parents('tr').children('td').first().text();
+            $name = $(this).parents('tr').children('td').eq(1).text();
+            $c = confirm("確定要刪除" + $name + "?");
+            if($c){
+                $.post("<?=url('deleteproduct' , 'oaseadmin');?>" , {
+                    id :$id
+                }).done(function(data){
+                    history.go(0);
+                });
+            }
+        });
+
+        $('.product_special_order_view tbody').on('click' , '.delete' , function(){
+            $id = $(this).parents('tr').children('td').first().text();
+            $name = $(this).parents('tr').children('td').eq(1).text();
+            $c = confirm("確定要刪除" + $name + "?");
+            if($c){
+                $.post("<?=url('deleteproductspecialorder' , 'oaseadmin');?>" , {
+                    id :$id
+                }).done(function(data){
+                    history.go(0);
+                });
+            }
+        });
+
+        $('.product_special_order_view tbody').on('click' , '.edit' , function(){
+            $id = $(this).parents('tr').children('td').first().text();
+            $name = $(this).parents('tr').children('td').eq(1).text();
+            $price = $(this).parents('tr').children('td').eq(2).text();
+            $('#editproductspecialorderform input[name=id]').val($id);
+            $('#editproductspecialorderform input[name=name]').val($name);
+            $('#editproductspecialorderform input[name=price]').val($price);
+            $(".editunit .box").show('slow');
+        });
+
+    });
+
+    // ee(1, "Raccoon", 1,1,"1993-06-08" , "台北科技大學" , "admin" , 500000 , 6);
+
+    function ee(id , name , type , sex , birthday , address , user , salay , dep){
+
+        $("#editemployeeform input[name=id]").val(id);
+        $('#editemployeeform input[name=name]').val(name);
+        $('#editemployeeform #type option').each(function(){
+            if(this.value == type){
+                this.selected = true;
+            }
+        });
+
+        $('#editemployeeform input[name=sex]').each(function(){
+            if(this.value == sex){
+                this.checked = true;
+            }
+        });
+
+        $("#editemployeeform input[name=birthday]").val(birthday);
+
+        $("#editemployeeform input[name=address]").val(address);
+
+        $("#editemployeeform input[name=username]").val(user);
+
+        $("#editemployeeform input[name=salary]").val(salay);
+
+        $("#editemployeeform #unit option").each(function(){
+            if(this.value == dep){
+                this.selected = true;
+            }
+        });
+
+        $('#editemployeeform .box').show('slow');
+    }
+    // ed(1);
+    function ed($id , $name){
+        $c = confirm("你確定要刪除 " + $name + " 的帳號（無法復原）");
+        if($c){
+            $.post("<?=url('deleteemployee' , 'oaseadmin');?>" , {
+                id : $id
+            }).done(function(data){
+                history.go(0);
+            });
+        }
+    }
+
+
+</script>
+</body>
+</html>

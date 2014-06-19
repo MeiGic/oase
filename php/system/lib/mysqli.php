@@ -34,6 +34,7 @@
 		public function query($sql){
 			$this->sql = $sql;
 			$this->query = $this->_conn->query($this->sql);
+            Log::write("SQL:" . $sql);
 			return $this->query;
 		}
 

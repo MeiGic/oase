@@ -10,15 +10,15 @@ For delivery man is Oase Delivery App.
 
 If customers order drinks from Oase website.
 The delivery man should see that order and delivery goods to customer.
-Than he can scan the QRCode which provided by customer's order page.
+Then he can scan the QRCode which provided by customer's order page.
 And that order is complete, it can be seen from oaseadmin.
-Oase admin can manage all things on website, and even infomations for members and employees.
+Oase admin can manage all things on the website, and even infomations of members and employees.
 
 + "root" folders is our website main pages.
 + "php" is our backend server-side programs.
 + "oase-delivery-app" is our delivery mobile app.
 
-Attribute to Raccoon, JackMaxj, Arkfear, longbiau.
+All attribute to Raccoon, JackMaxj, Arkfear, longbiau.
 
 Copyright 2014 MeiGic
 

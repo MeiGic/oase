@@ -8,7 +8,7 @@ For customers is our main website called Oase.
 For clerks and managers and admins is oaseadmin.
 For delivery man is Oase Delivery App.
 
-If a customer order a drink from Oase website.
+If customers order drinks from Oase website.
 The delivery man should see that order and delivery goods to customer.
 Than he can scan the QRCode which provided by customer's order page.
 And that order is complete, it can be seen from oaseadmin.

@@ -1,0 +1,6 @@
+# view AndroidManifest.xml #generated:11
+-keep class com.mirasense.scanditsdk.plugin.ScanditSDKActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:5
+-keep class io.meigic.oasedeliveryapp.OASEDelivery { <init>(...); }
+

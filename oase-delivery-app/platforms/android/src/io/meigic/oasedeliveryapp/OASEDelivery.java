@@ -17,12 +17,12 @@
        under the License.
  */
 
-package io.cordova.hellocordova;
+package io.meigic.oasedeliveryapp;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
 
-public class HelloCordova extends CordovaActivity 
+public class OASEDelivery extends CordovaActivity 
 {
     @Override
     public void onCreate(Bundle savedInstanceState)

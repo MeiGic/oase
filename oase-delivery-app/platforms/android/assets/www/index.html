@@ -6,13 +6,13 @@
     This template can be used for creating apps that require user login and user registration before starting actual app.
 --> 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0;" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
     <meta name = "format-detection" content = "telephone=no"/>
     <link rel="stylesheet" type="text/css" href="appframework/af.ui.css" />
     <link rel="stylesheet" type="text/css" href="appframework/icons.css" />
     <script type="text/javascript" charset="utf-8" src="appframework/appframework.ui.min.js"></script>
-	<script src="http://debug-software.intel.com/target/target-script-min.js#b244aefd-aa91-08bb-5b6a-0b99ed76b6f1"></script>
     <script>   
+		var serverAddress = "http://www.meigic.tw/";
         $.ui.autoLaunch = false; 
         $.ui.backButtonText = "Back";
     
@@ -37,7 +37,7 @@
             
             // sigin code here
             // Send the data using post
-			var url = "http://www.meigic.tw/oaseadmin/oaseadmin/authapi/";
+			var url = serverAddress + "oaseadmin/oaseadmin/authapi/";
 			var params = {username:$("#username").val(),password:$("#password").val()};
 			$.post( url, params, function( data ) {
 				console.log(data);
@@ -67,25 +67,53 @@
         function startApp(){
             // clears all back button history
             $.ui.clearHistory();  
-            fetchlist();
+			getstorelist();
             // your app code here
         }
+		
+		var storelist;
+		function getstorelist() {
+			$.getJSON(serverAddress + "oaseadmin/oaseadmin/storelistapi/", {type:"storelist"}, function(data) {
+				storelist = data.result;
+				//console.log(storelist);
+				fetchlist();
+			});
+		}
 
 		function fetchlist() {
-			$.get("http://www.meigic.tw/oaseadmin/oaseadmin/getdeliverorder/", function(data) {
-				//console.log(data);
-				console.log("FetchSuccess");
-				$("#orderlist").html("");
-				var obj = $.parseJSON(data);
-				$.each(obj, function(index, val) {
-					$("#orderlist").append('<li><a class="button" onclick="scan(' + val.id + ')"><b>訂單編號 #' + val.id + '</b><br>' + val.order_address + ' 下定時間：' + val.timelog + '</a></li>');
-					$.post( "http://www.meigic.tw/oaseadmin/oaseadmin/changeorderstateapi/", {id:val.id,state:2}, function( data ) {
-						if(data == "success")
-							console.log("state(2):" + val.id);
+			if(!isScanning) {
+				$.get(serverAddress + "oaseadmin/oaseadmin/getdeliverorder/", function(data) {
+					console.log(data);
+					//console.log("FetchSuccess");
+					$("#orderlist").empty();
+					var obj = $.parseJSON(data);
+					$.each(obj, function(index, val) {
+						var deliver_request = val.deliver_request;
+						var address = '';
+						if(deliver_request == 0) {
+							var matchstore;
+							for(var i = 0; i < storelist.length; i++) {
+								if(storelist[i].id == val.unit_id) {
+									matchstore = storelist[i];
+									break;
+								}
+							}
+							//console.log(matchstore)
+							address = "自取：" + matchstore.name + matchstore.type + " 地址：" + matchstore.address;
+						} else
+							address = "外送：" + val.order_address;
+							
+						$("#orderlist").append('<li><a class="button" onclick="scan(' + val.id + ')"><b>訂單編號 #' + val.id + '</b><br>' + address + '<br>下定時間：' + val.order_time + '<br>姓名：' + val.mem_name + ' 電話：' + val.phone + '<br>總價：$' + val.price + '</a></li>');
+						if(val.state < 2) {
+							$.post(serverAddress + "oaseadmin/oaseadmin/changeorderstateapi/", {id:val.id,state:2}, function( data ) {
+								if(data == "success")
+									console.log("state(2):" + val.id);
+							});
+						}
 					});
+					setTimeout(fetchlist, 2000);
 				});
-			});
-			setTimeout(fetchlist, 5000);
+			}
 		}
     </script>   
 	<style>
@@ -99,26 +127,28 @@
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript">
+	var isScanning = false;
 	var delivery_id;
 	function onBodyLoad()
 	{
 		document.addEventListener("deviceready", onDeviceReady, false);
 	}
 	function success(resultArray) {
-		$.post( "http://www.meigic.tw/oaseadmin/oaseadmin/verifycode/", {id:delivery_id, code:resultArray[0]}, function( data ) {
+		$.post(serverAddress + "oaseadmin/oaseadmin/verifycode/", {id:delivery_id, code:resultArray[0]}, function( data ) {
 			if(data == "true") {
-				$.post( "http://www.meigic.tw/oaseadmin/oaseadmin/changeorderstateapi/", {id:delivery_id,state:3}, function( data ) {
+				$.post(serverAddress + "oaseadmin/oaseadmin/changeorderstateapi/", {id:delivery_id,state:3}, function( data ) {
 					if(data == "success") {
-						alert("成功送達： 訂單編號#" + delivery_id);
 						console.log("state(3):" + delivery_id);
-						fetchlist();
-					}
-					else
+						//showAlert("成功送達： 訂單編號#" + delivery_id, scanFinish, "完成", "確定");
+						alert("成功送達： 訂單編號#" + delivery_id);
+					} else {
 						alert("更改失敗： 訂單編號#" + delivery_id);
+					}
 				});
 			} else {
 				alert("驗證失敗： 訂單編號#" + delivery_id);
 			}
+			scanFinish();
 		});
 		//alert("Scanned " + resultArray[0] + " code: " + resultArray[1]);
 
@@ -134,15 +164,23 @@
 	}
 
 	function failure(error) {
-		alert("掃描失敗： 訂單編號#" + delivery_id + "錯誤訊息： " + error);
+		alert("掃描失敗： 訂單編號#" + delivery_id + " 錯誤訊息： " + error);
+		scanFinish();
 	}
 
 	function scan(scan_id) {
 		delivery_id = scan_id;
+		isScanning = true;
+		
 		// See below for all available options.
 		cordova.exec(success, failure, "ScanditSDK", "scan",
 			 ["/Jc1Iu8cEeOECBxTIoQWDgBCVpt0q6159XxqHVZ4gBs",
 			  {"disableStandbyState" : true}]);
+	}
+	
+	function scanFinish() {
+		isScanning = false;
+		fetchlist();
 	}
 
 	app.initialize();
@@ -184,9 +222,9 @@
             <br>
             <br>
             </div>
-            <input id="username" name="username" type="text" placeholder="帳號" />
-            <input id="password" name="password" type="password" placeholder="密碼" />
-            <a class="button block green" href="#" id="login">登入</a>
+			<input id="username" name="username" type="text" placeholder="帳號" required></input>
+			<input id="password" name="password" type="password" placeholder="密碼" required></input>
+			<a class="button block green" href="#" id="login">登入</a>
 			<br>
 			<h2 id="msg" style="text-align:center"></h2>
         </div>

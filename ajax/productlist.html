@@ -210,6 +210,11 @@ function showdetail() {
 	$( '#detail' ).removeClass('hidden');
 	$( '#detail' ).show( "blind", { direction: "left" }, "fast");
 	$( "#msg" ).hide();
+	
+	setbtngroupvalue("size", "L");
+	setbtngroupvalue("sweet", 5);
+	setbtngroupvalue("temp", 5);
+	$("#specialorder").select2("val", "");
 }
 var totalprice = 0;
 var sizeprice = [];
@@ -268,6 +273,12 @@ $(function () {
 });
 function getbtngroupvalue(id) {
 	return $("#" + id).find("label.active").children("input").val();
+}
+function setbtngroupvalue(id, value) {
+	//console.log($("#" + id).find("label").children("input[value='" + value + "']").val());
+	$("#" + id).find("label").removeClass("active");
+	$("#" + id).find("label").children("input[value='" + value + "']").parent().addClass("active");
+	
 }
 $('#size label').click(function() {
     $('#size label').addClass('active').not(this).removeClass('active');

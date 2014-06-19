@@ -112,9 +112,13 @@
 						</div>
 				  </label>
 				</div>
+				<div id="msg">
+					<h4 id="fail" class="text-danger"></h4>
+					<h4 id="success" class="text-success"></h4>
+				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="submit" id="confirmorder" class="btn btn-success" data-dismiss="modal">完成！</button>
+				<button type="submit" id="confirmorder" class="btn btn-success">完成！</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
 		</div>
@@ -133,7 +137,9 @@ $.get( "http://www.meigic.tw/oaseadmin/oaseadmin/checkapi/", {sessionid:$.cookie
 		$("#checkoutnow").show();
 	}
 });
+var storelist;
 $.getJSON("http://www.meigic.tw/oaseadmin/oaseadmin/storelistapi/", {type:"storelist"}, function(data) {
+	storelist = data.result;
 	$.each(data.result, function(key, val) {
 		$("#storedropdown").append($("<option></option>").attr("value", val.id).text(val.name + val.type));
 	});
@@ -353,9 +359,22 @@ function getrecordlist() {
 						$.each(recorddata, function(key, val) {
 							//console.log(val);
 							var code = val.code;
-							var address = val.order_address;
+							var deliver_request = val.deliver_request;
+							var address = '';
+							if(deliver_request == 0) {
+								var matchstore;
+								for(var i = 0; i < storelist.length; i++) {
+									if(storelist[i].id == val.unit_id) {
+										matchstore = storelist[i];
+										break;
+									}
+								}
+								//console.log(matchstore)
+								address = "自取：" + matchstore.name + matchstore.type + " 地址：" + matchstore.address;
+							} else
+								address = "外送：" + val.order_address;
 							var phone = val.phone;
-							var timelog = val.timelog;
+							var timelog = val.order_time;
 							var order = val.order;
 							var state = +(val.state);
 							$.each(order, function(key, val) {
@@ -374,7 +393,9 @@ function getrecordlist() {
 									var productprice = +(sizeprice[size]);
 									var sweet = +(val.sweet);
 									var temp = +(val.temp);
-									var specialorderarray = val.specialorder.split(',');
+									var specialorderarray = '';
+									if(val.specialorder != null)
+										specialorderarray = val.specialorder.split(',');
 									var matchspecialorderlist = [];
 									var specialorderstring = [];
 									var specialorderprice = 0;
@@ -450,32 +471,51 @@ $( "#confirmorder" ).on("click", function( event ) {
 					address = $("#manual_address").val();
 					break;
 				}
-				var params = {sessionid:$.cookie('PHPSESSID'),
-							  mem_id:mem_id,
-							  address:address,
-							  u_id:u_id,
-							  phone:phone,
-							  order:orderdata,
-							  totalprice:totalprice};
-				//console.log(params);
-				var posting = $.post( "http://www.meigic.tw/oaseadmin/oaseadmin/orderapi/", params );
-				posting.done(function( data ) {
-					//console.log(data);
-					var info = data.split(":");
-					if(info[0] == "success") {
-						$.cookie('PHPSESSID', info[1], { path: '/' });
-						var url = "http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/?type=remove_temp_order";
-						if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
-							url += "&sessionid=" + $.cookie('PHPSESSID');
-						$.get( url, function(data) {
+				
+				$( "#msg" ).hide( "blind", { direction: "down" }, "fast", function() {
+					$( "#fail" ).html('');
+					$( "#success" ).html('');
+						
+					if(phone == '' || (address == '' && u_id == '')) {
+						if(phone == '')
+							$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 請填寫電話');
+						else if((address == '' && u_id == ''))
+							$( "#fail" ).html('<i class="fa fa-exclamation-circle"></i> 請填寫寄送方式');
+						$( "#msg" ).show( "blind", { direction: "down" }, "fast", function() {
+						});
+					} else {
+						var params = {sessionid:$.cookie('PHPSESSID'),
+									  mem_id:mem_id,
+									  address:address,
+									  u_id:u_id,
+									  phone:phone,
+									  order:orderdata,
+									  totalprice:totalprice};
+						//console.log(params);
+						var posting = $.post( "http://www.meigic.tw/oaseadmin/oaseadmin/orderapi/", params );
+						posting.done(function( data ) {
 							//console.log(data);
-							location.reload();
+							var info = data.split(":");
+							if(info[0] == "success") {
+								$.cookie('PHPSESSID', info[1], { path: '/' });
+								var url = "http://www.meigic.tw/oaseadmin/oaseadmin/shopcartapi/?type=remove_temp_order";
+								if($.cookie('PHPSESSID') != undefined && $.cookie('PHPSESSID') != '')
+									url += "&sessionid=" + $.cookie('PHPSESSID');
+								$.get( url, function(data) {
+									//console.log(data);
+									$( "#success" ).html('<i class="fa fa-check-circle"></i> 成功');
+									$( "#msg" ).show( "blind", { direction: "down" }, "fast", function() {
+										location.reload();
+									});
+								});
+							}
 						});
 					}
 				});
 			}
 	});
 });
+$( "#msg" ).hide();
 function QRCode(content, width, height){
 	// 預設寬高為 120x120
 	width = !!width ? width : 120;
